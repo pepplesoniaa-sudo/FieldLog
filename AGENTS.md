@@ -1,6 +1,6 @@
 # FieldLog
 
-Source of product facts: `fieldlog/FieldLog-V1-PRD-v2.2.md` (copy it to `docs/` before the first build session). Version 2.2 adds AI (FR-58 to FR-60). Where it changes version 2.1, version 2.2 wins. Pointers like "PRD 7.4" are section numbers; FR, NFR, US, A, NA and P ids are rows in it. Workspace rules live in .agents/rules/. AGENTS.md holds product facts; the rules files hold the detail it leaves out. Where this file and the PRD differ, stop and ask Rox.
+Source of product facts: `docs/FieldLog-V1-PRD-v2.2.md`. Version 2.2 adds AI (FR-58 to FR-60). Where it changes version 2.1, version 2.2 wins. Pointers like "PRD 7.4" are section numbers; FR, NFR, US, A, NA and P ids are rows in it. Workspace rules live in .agents/rules/. AGENTS.md holds product facts; the rules files hold the detail it leaves out. Where this file and the PRD differ, stop and ask Rox.
 
 ## What FieldLog is
 
@@ -48,13 +48,13 @@ Never lose a captured entry or overwrite an EntryVersion, from the phone with no
 
 ## Fixed numbers
 
-14 days offline, warning on day 10. Up to 10 photos per entry (FR-15, a Should Rox put in the MVP on 25 Oct 2026). Note 500 characters, summary 2,000 (NA8). Image accepted up to 25 MB, output 1,600 px long edge and 450 KB or less (P1, P5). Sync batch of 25 operations (P8). Presigned URLs 15 minutes (P9). Sync every 60 seconds while open and online (FR-22). Retention default 7 years (FR-55).
+14 days offline, warning on day 10. Up to 10 photos per entry (FR-15, a Should Rox put in the MVP on 25 Oct 2026). Note 500 characters, summary 2,000 (NA8). Image accepted up to 25 MB, output 1,600 px long edge and 450 KB or less (P1, P5). Sync batch of 25 operations (P8). Presigned URLs 15 minutes (P9). Sync every 60 seconds while open and online (FR-22). Retention default 7 years (FR-55). Meaning search 2 s or less at p95 (NFR-21).
 
 ## Scope: what to build
 
-- Build only Must requirements in PRD section 5. Build a Should only when Rox names it. Never build a Could or a Won't. Rox has named FR-58, FR-59 and FR-60 (PRD 5.7a) for build, after the Musts they depend on, and has not named any other Should.
+- Build only Must requirements in PRD section 5. Build a Should only when Rox names it. Never build a Could or a Won't. Rox has named FR-58, FR-59 and FR-60 (PRD 5.7a) for build, after the Musts they depend on, and named FR-15 (up to 10 photos per entry) on 25 Oct 2026. No other Should is named.
 - Musts are the rows marked Must. Ranges such as FR-09 to FR-17, FR-20 to FR-28 and FR-29 to FR-33 contain Shoulds (FR-16, FR-26, FR-31, FR-32a) that are not in the MVP; FR-15 is in the MVP.
-- Must areas: access (FR-01 to FR-05), capture (FR-09 to FR-14, FR-17), offline and sync (FR-20 to FR-25, FR-27, FR-28), reports (FR-29, FR-29a, FR-30, FR-32, FR-33), review (FR-36 to FR-42), search (FR-46), admin (FR-51, FR-52, FR-54, FR-55, FR-57).
+- Must areas: access (FR-01 to FR-05), capture (FR-09 to FR-14, FR-17, plus the named Should FR-15), offline and sync (FR-20 to FR-25, FR-27, FR-28), reports (FR-29, FR-29a, FR-30, FR-32, FR-33), review (FR-36 to FR-42), search (FR-46), admin (FR-51, FR-52, FR-54, FR-55, FR-57).
 - Rox, not the agent, decides when the build has slipped and what is cut.
 - The go decision uses four measures: median time from last photo to submission (the north-star), median reporting minutes per report, the dual-running rate, and data integrity (G1, 11.1, Phase 3).
 
@@ -148,6 +148,6 @@ These are problems in the PRD itself. The file above follows the audit's propose
 5. Should the admin pick-list screen (FR-53, a Should) be built, or only a seed script? The file assumes a seed script.
 6. Which email provider and error tracker? The PRD names none.
 7. Answered 23 October 2026. Flutterwave is not in V1. Gemini and pgvector are in V1 as FR-58 to FR-60. The Gemini free tier fails the no training, 30-day and region rules, so Vertex AI at a regional endpoint is used instead.
-8. Where does the PRD live in the repository? The file assumes `docs/FieldLog-V1-PRD-v2.2.md` after you copy it.
+8. Answered 25 October 2026: the PRD is at `docs/FieldLog-V1-PRD-v2.2.md`.
 9. Is TypeScript part of the stack? It is not in the PRD.
 10. AI questions still open (PRD 14, Q20 to Q33): the exact wording of FR-58 and FR-59 (Q20), the DPIA and what text is embedded (Q21, Q22), how long suggestions are kept (Q24), the pgvector version (Q25), Google's log retention in days (Q31), whether FR-58 to FR-60 are Should or Must and when they are built (Q32), and the AI environment variable names (Q33). Until Rox answers Q31 and the DPIA is signed, build and test with every AI switch off and do not turn one on.
