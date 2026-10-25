@@ -1,6 +1,6 @@
 # FieldLog
 
-Source of product facts: `docs/FieldLog PRD.md` (v2.2). Pointers like "PRD 7.4" are section numbers; FR, NFR, US, A, NA and P ids are rows in it. No other rules files exist. Where this file and the PRD differ, stop and ask Rox.
+Source of product facts: `docs/FieldLog-V1-PRD-v2.2.md` (v2.2). Pointers like "PRD 7.4" are section numbers; FR, NFR, US, A, NA and P ids are rows in it. Workspace rules live in .agents/rules/. AGENTS.md holds product facts; the rules files hold the detail it leaves out. Where this file and the PRD differ, stop and ask Rox.
 
 ## What FieldLog is
 
@@ -23,10 +23,7 @@ Never lose a captured entry or overwrite an EntryVersion, from the phone with no
 - "Saved on this phone" appears only after the entry and its photos are written to IndexedDB in one transaction (FR-21).
 - FieldLog deletes local data only on a closed account (FR-57), after it has tried to upload every entry. In every other case, including session expiry and a 401, it deletes nothing (FR-04, FR-28).
 - Unsynced data is kept at least 14 days, with a daily warning from day 10 (FR-28). Sign-out is blocked while the user has unsynced entries unless they confirm (FR-05).
-- Sync is an add-only log of operations, each with a client UUID and one type: CREATE_ENTRY, ADD_VERSION, DELETE_ENTRY, ADD_PHOTO or REMOVE_PHOTO. A repeated operation is acknowledged, not applied twice (FR-24).
 - The server rejects any operation on an entry in a submitted or approved revision except ADD_VERSION (FR-24).
-- Each photo carries a SHA-256 checksum of the compressed file, computed on the device. The server downloads the stored object, recomputes SHA-256 and marks the photo FAILED on a mismatch (P10).
-- Every server query is scoped by organisationId and membership, except that the admin reads the whole organisation. Permissions are checked on the server for every request (FR-02, FR-03, PRD 7.4).
 - AI summary and semantic search never block capture, sync, submission, review or export. They are online-only and fall back to the manual summary or FR-46 search (FR-58, FR-59, 7.3). No GPS, user names, emails or image pixels are sent to the AI provider.
 
 ## Capture rules
@@ -41,11 +38,9 @@ Never lose a captured entry or overwrite an EntryVersion, from the phone with no
 ## Report and review rules
 
 - A Visit is one supervisor, one site, one local date in the site's time zone. Each Visit has one report (FR-29).
-- Submitting freezes the revision with a snapshot and SHA-256, and the status becomes Submitted (FR-36).
 - A late entry is one that reaches a Visit whose report is already Submitted or Approved. It is never dropped (FR-29a). On a Submitted report it joins the next revision. On an Approved report the server creates a new Draft revision and the approved one stays the latest approved version. It is not the same as the "Added from gallery later" flag.
 - Approve needs no comment. Request changes needs a comment of at least 10 characters (FR-37). An approved revision is locked (FR-39).
 - Four statuses, taken from the newest revision: Draft, Submitted, Changes requested, Approved. "Latest approved: revision N" is shown beside it (FR-41).
-- The standard template has these sections in order: header, weather, work summary, entry log, issues and observations, flags, supervisor summary, review block, footer (P12).
 - The completeness check blocks on an unsynced entry, a missing required field, or a photo in PENDING_UPLOAD or UPLOADED. It warns on location or clock flags. A photo FAILED after all retries does not block (FR-32).
 - AI summary (FR-58, Should): a suggestion of 150 words or fewer is shown with Accept, Edit and Reject. Nothing is saved without Accept. Accepted text stores aiAssisted, model id and prompt version with an audit event. The suggestion never changes entries or quantities.
 
@@ -120,7 +115,6 @@ api/health/                  Liveness
 - Work on one FR id at a time and name it at the top of your response.
 - Packages named in the Stack section may be installed. Any other package needs Rox's approval first: stop and ask.
 - The Prisma schema in PRD section 10 is fixed. Never add, rename or remove a model, field, enum or index. Never edit the Prisma schema file, create or edit a migration file, or run `prisma migrate` or `prisma db push`. The AI and embedding columns for FR-58/FR-59, the pgvector extension and its index are not approved; wait for Rox to approve Q19 and to make the schema and migration changes.
-- Application code and tests may contain Prisma queries, but the agent never runs a migration, reset, seed or query against any database. Rox runs them.
 - When the PRD is silent, stop and ask instead of assuming. If Rox tells you to proceed, list each assumption at the end of the response.
 - A Must is done when its user story in PRD 5.8 passes and the NFRs in 7.12 hold: save entry within 2 s at p95, 170 KB gzipped JavaScript on capture, WCAG 2.2 AA, latest two versions of Chrome, Safari, Edge and Firefox, and tenant-isolation tests per API route.
 
