@@ -1,6 +1,6 @@
 # FieldLog
 
-Source of product facts: `docs/FieldLog-V1-PRD-v2.2.md`. Version 2.2 adds AI (FR-58 to FR-60). Where it changes version 2.1, version 2.2 wins. Pointers like "PRD 7.4" are section numbers; FR, NFR, US, A, NA and P ids are rows in it. Workspace rules live in .agents/rules/. AGENTS.md holds product facts; the rules files hold the detail it leaves out. Where this file and the PRD differ, stop and ask Rox.
+Source of product facts: `docs/FieldLog-V1-PRD-v2.3.md`. Version 2.3 adds sign-up, verification and a test-mode subscription (FR-61 to FR-64) and makes FR-06 and FR-07 Musts. Where it changes an earlier version, version 2.3 wins. Pointers like "PRD 7.4" are section numbers; FR, NFR, US, A, NA and P ids are rows in it. Workspace rules live in .agents/rules/. AGENTS.md holds product facts; the rules files hold the detail it leaves out. Where this file and the PRD differ, stop and ask Rox.
 
 ## What FieldLog is
 
@@ -21,6 +21,7 @@ Never lose a captured entry or overwrite an EntryVersion, from the phone with no
 - All capture steps work offline after first sign-in (FR-20), except on iOS in a normal Safari tab, where offline capture is blocked until FieldLog is installed to the home screen (FR-27).
 - "Saved on this phone" appears only after the entry and its photos are written to IndexedDB in one transaction (FR-21).
 - FieldLog never deletes unsynced data (FR-28). It deletes local data in two cases only: a synced photo after 7 days when storage is low (PRD 7.3, NA13), and everything on a closed account (FR-57), but only after the server has acknowledged every entry captured before deactivation and its photos are VERIFIED. In every other case, including session expiry and a 401, it deletes nothing (FR-04).
+- An expired or unpaid subscription never rejects a sync batch, deletes local or server data, or blocks FR-57. It blocks only: starting a Visit online, submit, approve, invites (FR-63).
 - Unsynced data is kept at least 14 days, with a daily warning from day 10 (FR-28). Sign-out is blocked while the user has unsynced entries unless they confirm (FR-05).
 - Sync is an add-only log of operations, each with a client UUID and one type: CREATE_ENTRY, ADD_VERSION, DELETE_ENTRY, ADD_PHOTO or REMOVE_PHOTO. A repeated operation is acknowledged, not applied twice (FR-24).
 - The server rejects any operation on an entry in a submitted or approved revision except ADD_VERSION (FR-24).
@@ -52,16 +53,16 @@ Never lose a captured entry or overwrite an EntryVersion, from the phone with no
 
 ## Scope: what to build
 
-- Build only Must requirements in PRD section 5. Build a Should only when Rox names it. Never build a Could or a Won't. Rox has named FR-58, FR-59 and FR-60 (PRD 5.7a) for build, after the Musts they depend on, and named FR-15 (up to 10 photos per entry) on 25 Oct 2026. No other Should is named.
+- Build only Must requirements in PRD section 5. Build a Should only when Rox names it. Never build a Could or a Won't. Rox has named FR-58, FR-59 and FR-60 (PRD 5.7a) for build, after the Musts they depend on, and named FR-15 (up to 10 photos per entry) on 25 Oct 2026. FR-06 and FR-07 became Musts in PRD 2.3. No other Should is named.
 - Musts are the rows marked Must. Ranges such as FR-09 to FR-17, FR-20 to FR-28 and FR-29 to FR-33 contain Shoulds (FR-16, FR-26, FR-31, FR-32a) that are not in the MVP; FR-15 is in the MVP.
-- Must areas: access (FR-01 to FR-05), capture (FR-09 to FR-14, FR-17, plus the named Should FR-15), offline and sync (FR-20 to FR-25, FR-27, FR-28), reports (FR-29, FR-29a, FR-30, FR-32, FR-33), review (FR-36 to FR-42), search (FR-46), admin (FR-51, FR-52, FR-54, FR-55, FR-57).
+- Must areas: access (FR-01 to FR-07, FR-61 sign-up, FR-62 email verification), billing (FR-63 subscription, FR-64 checkout and payment attempts), capture (FR-09 to FR-14, FR-17, plus the named Should FR-15), offline and sync (FR-20 to FR-25, FR-27, FR-28), reports (FR-29, FR-29a, FR-30, FR-32, FR-33), review (FR-36 to FR-42), search (FR-46), admin (FR-51, FR-52, FR-54, FR-55, FR-57).
 - Rox, not the agent, decides when the build has slipped and what is cut.
 - The go decision uses four measures: median time from last photo to submission (the north-star), median reporting minutes per report, the dual-running rate, and data integrity (G1, 11.1, Phase 3).
 
 ## Not in scope
 
 - Won't in V1: single sign-on and multi-factor sign-in, voice notes and dictation, a template builder, a map view of entries (FR-50). The map pin picker for one entry is a Must (FR-12).
-- HSE incidents, environmental sampling and lab results, progress dashboards, action tracking, procedures and training library, public website, native iOS and Android apps, chat or messaging, multiple organisations, billing and payments (PRD 3.2).
+- HSE incidents, environmental sampling and lab results, progress dashboards, action tracking, procedures and training library, public website, native iOS and Android apps, chat or messaging, a user in more than one organisation, live payments, refunds and invoices (PRD 3.2). One marketing page at / is allowed.
 - System integrations: no link to document-management or project systems. The PDF export, invite email and object storage are not integrations. Review comments are not chat.
 - AI is allowed only as FR-58, FR-59 and FR-60 (PRD 5.7a, 6 Part B, 7.13). Nothing else may call a language model or image model, and no AI step may run when the organisation's switch for it is off. Every suggestion needs a person to accept it. No automatic captions, summaries or approvals.
 - Retention deletion is not built (FR-55). The admin screen only shows and sets the retention period.
@@ -74,8 +75,8 @@ Never lose a captured entry or overwrite an EntryVersion, from the phone with no
 - pg-boss for background jobs, run by a separate long-running Node worker from the same codebase.
 - S3-compatible private object storage with presigned URLs.
 - Use exifr, browser canvas, sharp, @react-pdf/renderer and Zod (NA7). Install docx only if Rox asks for Word. Replace a library only with Rox's approval.
-- No email provider or error tracker is chosen. Ask Rox before installing one.
-- Not in V1: Flutterwave. Add no code, route, table or package for payments (billing is a non-goal).
+- Email: Gmail SMTP, for testing only in the app's region (NA14), for codes, invites and resets; notification emails (FR-43) stay unbuilt. No error tracker is chosen; ask Rox before installing one.
+- Payments: Flutterwave hosted checkout in test mode only (FR-64, PRD 7.14). Card details never reach FieldLog. Install only the package Rox names; never use live keys.
 - AI stack (PRD 7.13): Gemini on Google Cloud (Vertex AI) at the regional endpoint in the app's region. Never use the Gemini API free tier or the paid Gemini API key route, and never call a global endpoint. Install only the one Google client package Rox names. Caching, grounding, file storage and stored sessions stay off.
 - Vector search: the pgvector extension in PostgreSQL, embeddings in their own table, one cosine HNSW index. Read and write the vector column with raw SQL, because Prisma's normal client cannot.
 - Never send GPS, user names or email addresses to the AI provider (PRD 6 Part B rule 3). Photos sent are the compressed JPEGs only.
@@ -87,7 +88,8 @@ Never lose a captured entry or overwrite an EntryVersion, from the phone with no
 Routes from PRD 7.2, relative to the Next.js App Router root. Folders other than these routes are not defined; ask Rox before creating a top-level folder.
 
 ```
-sign-in/, invite/[token]/, reset/[token]/   Access (public)
+page.tsx at the root         Marketing page (public)
+sign-in/ (?mode=sign-in|sign-up|reset), invite/[token]/, reset/[token]/   Access (public)
 (app)/today/                 Supervisor home: recent sites, sync status, today's entries
 (app)/capture/               New entry form (?siteId=)
 (app)/entry/                 Entry view, edit and history (?id=)
@@ -97,10 +99,12 @@ sign-in/, invite/[token]/, reset/[token]/   Access (public)
 (app)/review/                Reviewer queue of submitted reports
 (app)/search/                Search by project, site and date; meaning search when switched on
 (admin)/admin/               projects, sites, users, pick-lists, settings
+(admin)/admin/billing/       Subscription, seats, pay, payment history
 api/sync/                    bootstrap, pull, batches
 api/photos/[photoId]/        upload-url, complete
 api/reports/[reportId]/      read and edit, submit, reviews, exports
 api/search/                  Filtered search, plus meaning ranking (FR-59)
+api/billing/                 checkout (admin), webhook (public, signature checked)
 api/ai/                      Suggestion requests and accept, edit, reject (FR-58)
 api/health/                  Liveness
 ```
@@ -115,6 +119,7 @@ api/health/                  Liveness
 - Packages named in the Stack section may be installed. Any other package needs Rox's approval first: stop and ask.
 - The Prisma schema in PRD section 10 is fixed. Never add, rename or remove a model, field, enum or index.
 - One exception, approved by Rox on 23 October 2026 (PRD Q19): the AI additions already written in PRD section 10. That is the AI columns on Photo, ReportRevision and Organisation, the AiSuggestion and EntryEmbedding models, the AI enums and audit actions, the pgvector extension and the one HNSW index. For these only, you may edit the schema file and write one migration file, copying PRD section 10 exactly, including the hand-written index statement. Do not change a name, type or size. Anything else in the schema stays forbidden.
+- Second exception, approved by Rox on 26 October 2026 (PRD Q34): the v2.3 additions in PRD section 10 (Subscription, Payment, PaymentAttempt, EmailToken, RateLimitCounter, User.emailVerifiedAt, their enums and audit actions). Same rule: copy PRD section 10 exactly, one migration file, Rox runs it.
 - Never run `prisma migrate`, `prisma db push` or any command that changes a database. Rox runs migrations.
 - Add a CI check that fails any migration that drops the HNSW index, because Prisma proposes to drop it (PRD 7.13, Q26).
 - Application code and tests may contain Prisma queries, but the agent never runs a migration, reset, seed or query against any database. Rox runs them.
@@ -146,8 +151,8 @@ These are problems in the PRD itself. The file above follows the audit's propose
 3. FR-20 says all capture works offline; FR-27 blocks iOS capture until installed. The file states the iOS exception.
 4. How is a main reviewer "absent" detected for the Backup reviewer (FR-52)? Nothing in the PRD says.
 5. Should the admin pick-list screen (FR-53, a Should) be built, or only a seed script? The file assumes a seed script.
-6. Which email provider and error tracker? The PRD names none.
-7. Answered 23 October 2026. Flutterwave is not in V1. Gemini and pgvector are in V1 as FR-58 to FR-60. The Gemini free tier fails the no training, 30-day and region rules, so Vertex AI at a regional endpoint is used instead.
-8. Answered 25 October 2026: the PRD is at `docs/FieldLog-V1-PRD-v2.2.md`.
+6. Answered 26 October 2026: email is Gmail SMTP, for testing only. Error tracker: still open.
+7. Answered 23 October 2026, changed 26 October 2026: payments are in V1 as Flutterwave test-mode subscription checkout (FR-63, FR-64); live payments are not. Gemini and pgvector are in V1 as FR-58 to FR-60. The Gemini free tier fails the no training, 30-day and region rules, so Vertex AI at a regional endpoint is used instead.
+8. Answered 26 October 2026: the PRD is at `docs/FieldLog-V1-PRD-v2.3.md`.
 9. Is TypeScript part of the stack? It is not in the PRD.
 10. AI questions still open (PRD 14, Q20 to Q33): the exact wording of FR-58 and FR-59 (Q20), the DPIA and what text is embedded (Q21, Q22), how long suggestions are kept (Q24), the pgvector version (Q25), Google's log retention in days (Q31), whether FR-58 to FR-60 are Should or Must and when they are built (Q32), and the AI environment variable names (Q33). Until Rox answers Q31 and the DPIA is signed, build and test with every AI switch off and do not turn one on.
