@@ -6,7 +6,7 @@ description: Writes the role-by-route access and tenant-isolation tests for one 
 
 Run the steps in order for one route and method, or one server action.
 
-Public routes (sign-in, invite and api/health) are outside this skill. Say so and stop.
+Public routes (the marketing page, sign-in in every mode, invite, reset, api/billing/webhook and api/health) are outside this skill. Say so and stop. /admin/billing and api/billing/checkout are admin-only and inside it.
 
 ## 1. Load the shared fixture
 - Find the shared access fixture file. If none exists, ask Rox where test files go, then create it once, there.
