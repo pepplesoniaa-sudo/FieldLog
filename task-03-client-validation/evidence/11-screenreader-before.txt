@@ -1,0 +1,53 @@
+================================================================================
+FIELDLOG SCREEN READER AUDIT TRANSCRIPT: BEFORE ACCESSIBILITY FIXES
+================================================================================
+Screen Reader: Windows Narrator / NVDA 2024.3
+Browser: Microsoft Edge 130.0.2849.68 (x64)
+Target Route: http://localhost:3000/sign-in?mode=sign-up
+State Tested: Incomplete form with validation errors and disabled submit button
+
+TRANSCRIPT BY TAB ORDER (BEFORE FIXES):
+--------------------------------------------------------------------------------
+
+[Tab 1 - Heading]
+"FieldLog, heading level 1"
+"Create Organisation Account, heading level 2"
+
+[Tab 2 - Full Name Input]
+"Full Name, edit, blank"
+[Action: User leaves empty, presses Tab]
+"Organisation Name, edit, blank"
+[DEFECT 1]: Visual red border appeared around Full Name, but Narrator said NOTHING about the error. The error was purely a red CSS class. No aria-invalid, no aria-describedby. The user has no idea an error occurred.
+
+[Tab 3 - Organisation Name Input]
+"Organisation Name, edit, blank"
+[Action: User types 'AB', presses Tab]
+"Work Email Address, edit, blank"
+[DEFECT 2]: The length error ("Organisation name must be at least 3 characters") appeared visually below the field in red text, but Narrator did not announce it. It was completely skipped.
+
+[Tab 4 - Email Input]
+"Work Email Address, edit, blank"
+[Action: User types 'test', presses Tab]
+"Password, edit, blank"
+[DEFECT 3]: Error "Please enter a valid email address" is completely silent to the screen reader.
+
+[Tab 5 - Password Input]
+"Password, password edit, blank"
+[DEFECT 4]: Password hint "Must be at least 10 characters long" was rendered as static grey text without an id or aria-describedby. The screen reader user does not know there is a 10-character minimum requirement before typing.
+
+[Tab 6 - Supervisor Seats Input (Number spinner version)]
+"Supervisor Seats, spin button, 0, editable"
+[DEFECT 5]: Announced as "spin button, 0". When user types 5, Narrator announces "05".
+
+[Tab 7 - Terms Acceptance Checkbox]
+"I agree to the FieldLog Terms of Service and Privacy Policy, check box, not checked"
+[DEFECT 6]: Checkbox lacked aria-required="true". Screen reader did not announce that this field is mandatory for account creation.
+
+[Tab 8 - Submit Button Attempt]
+[Action: User presses Tab from Terms Checkbox]
+[DEFECT 7 - THE SILENT WALL]: Tab focus completely skips the submit button! 
+Narrator announces: "FieldLog Terms of Service link" or leaves the form entirely.
+Because the button was rendered as `<button disabled>`, the browser removes it from the accessibility tree and tab order.
+Narrator announcement: [SILENCE]. 
+User Hauwa has no way to discover the submit button, cannot inspect what fields are missing, and receives zero feedback on why the form cannot be submitted.
+================================================================================

@@ -1,0 +1,27 @@
+GIT LOG GRAPH OUTPUT
+====================
+
+Command: git log --graph --oneline --decorate --all -n 15
+
+*   e8b91c4 (HEAD -> master) Merge pull request #2 from feature/information-design
+|\  
+| * 7c4a102 feat(ui): add clamp() responsive typography and rem button padding
+| * 3a89e14 feat(head): add dynamic route titles and Open Graph metadata
+|/  
+* 5f10a82 (origin/master) feat(server): implement 201 status verification on enquiry endpoint
+* 9b43d21 fix(diagnostics): resolve port 3000 conflict and add EADDRINUSE preflight
+* 2e78c19 feat(scaffold): configure root App Router layout with design token imports
+* a129f70 chore(tokens): integrate canonical fieldlog.tokens.json into design system
+* f401b88 feat(tokens): define primary-tinted elevation shadows
+* d298c11 feat(typography): build 15-style semantic typography hierarchy
+* 8c55a29 feat(color): derive 13-tone palette and pin Primary 40
+* 19b3d04 docs(brief): author environmental remediation business brief
+* 44a9e10 chore(scaffold): initialize repository structure and documentation folders
+
+PULL REQUEST REFERENCE:
+PR #2: "feat: Information Design, Responsive Typography & Metadata"
+Branch: feature/information-design -> master (Merged)
+URL: https://github.com/fieldlog/fieldlog/pull/2
+
+DELETED BRANCH VERIFICATION:
+Branch 'experiment/static-cards' was created, evaluated against design tokens, rejected, and deleted without merging into master.

@@ -1,0 +1,915 @@
+// FieldLog V1 data model. PostgreSQL via Prisma.
+// Conventions: UUID keys (entries and photos use client-generated UUIDs),
+// organisationId on every tenant table (A3), audit fields on every mutable table,
+// soft deletes via deletedAt (A10), optimistic concurrency via version (A12).
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+// ---------- Enums ----------
+
+enum Role {
+  ADMIN
+  REVIEWER
+  BACKUP_REVIEWER
+  SUPERVISOR
+}
+
+enum UserStatus {
+  INVITED
+  ACTIVE
+  DEACTIVATED
+}
+
+enum LocationSource {
+  BROWSER
+  EXIF
+  MANUAL_PIN
+  NONE
+}
+
+enum PhotoSource {
+  CAMERA
+  GALLERY
+}
+
+enum PhotoStatus {
+  PENDING_UPLOAD
+  UPLOADED
+  VERIFIED
+  FAILED
+}
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED
+  CHANGES_REQUESTED
+  APPROVED
+}
+
+enum ReviewDecision {
+  APPROVED
+  CHANGES_REQUESTED
+}
+
+enum PickListKind {
+  ACTIVITY_TYPE
+  WORK_STATUS
+  UNIT
+  WEATHER
+}
+
+enum SyncBatchStatus {
+  RECEIVED
+  PARTIAL
+  COMPLETE
+  REJECTED
+}
+
+enum SyncOperationType {
+  CREATE_ENTRY
+  ADD_VERSION
+  DELETE_ENTRY
+  ADD_PHOTO
+  REMOVE_PHOTO
+}
+
+enum SyncOperationResult {
+  APPLIED
+  DUPLICATE
+  REJECTED
+}
+
+enum ExportFormat {
+  PDF
+  DOCX
+}
+
+enum ExportStatus {
+  QUEUED
+  RUNNING
+  READY
+  FAILED
+}
+
+enum AuditAction {
+  AI_ACCEPT
+  AI_REJECT
+  AI_SETTING_CHANGE
+  CREATE
+  UPDATE
+  SOFT_DELETE
+  RESTORE
+  SUBMIT
+  APPROVE
+  REQUEST_CHANGES
+  EXPORT
+  SIGN_IN
+  SIGN_OUT
+  SIGN_OUT_WITH_UNSYNCED
+  ASSIGN
+  UNASSIGN
+  DEACTIVATE
+  SYNC
+  SIGN_UP
+  EMAIL_VERIFIED
+  PASSWORD_RESET
+  LOCKOUT
+  PAYMENT_ATTEMPT
+  PAYMENT_RECEIVED
+  SUBSCRIPTION_CHANGE
+}
+
+enum AiFeature {
+  PHOTO_CAPTION
+  REPORT_SUMMARY
+}
+
+enum AiSuggestionOutcome {
+  SHOWN
+  ACCEPTED
+  EDITED
+  REJECTED
+  DISCARDED
+}
+
+// ---------- Tenancy and access ----------
+
+model Organisation {
+  id                String    @id @default(uuid()) @db.Uuid
+  name              String
+  slug              String    @unique
+  dataRegion        String // "uk" or "eu" (A5)
+  retentionYears    Int       @default(7) // A8
+  reportTemplateKey String    @default("standard-daily-v1") // A11
+  timeZone          String    @default("Europe/London")
+  aiCaptionsEnabled Boolean   @default(false) // Part B rule 1: off by default, admin switches on
+  aiSummaryEnabled  Boolean   @default(false)
+  aiSearchEnabled   Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  createdById       String?   @db.Uuid // no FK: the organisation exists before its first user
+  deletedAt         DateTime?
+  version           Int       @default(1)
+
+  users           User[]
+  sessions        Session[]
+  subscription    Subscription?
+  payments        Payment[]
+  paymentAttempts PaymentAttempt[]
+  emailTokens     EmailToken[]
+  memberships     Membership[]
+  siteAssignments SiteAssignment[]
+  projects        Project[]
+  sites           Site[]
+  pickListOptions PickListOption[]
+  visits          Visit[]
+  entries         Entry[]
+  entryVersions   EntryVersion[]
+  photos          Photo[]
+  reports         Report[]
+  reportRevisions ReportRevision[]
+  reportEntries   ReportEntry[]
+  reviews         Review[]
+  reportExports   ReportExport[]
+  aiSuggestions   AiSuggestion[]
+  entryEmbeddings EntryEmbedding[]
+  syncBatches     SyncBatch[]
+  syncOperations  SyncOperation[]
+  auditEvents     AuditEvent[]
+}
+
+model User {
+  id             String     @id @default(uuid()) @db.Uuid
+  organisationId String     @db.Uuid
+  email          String     @unique
+  name           String
+  shortCode      String // 2 to 6 characters, set by the admin at invite; used in report references
+  passwordHash   String? // argon2id; null until the invite is accepted
+  status         UserStatus @default(INVITED)
+  isOrgAdmin     Boolean    @default(false)
+  lastSignInAt   DateTime?
+  emailVerifiedAt DateTime? // set by the 6-digit code or by accepting an invite (FR-62)
+  failedSignIns  Int        @default(0)
+  lockedUntil    DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  createdById    String?    @db.Uuid
+  deletedAt      DateTime?
+  version        Int        @default(1)
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  createdBy    User?        @relation("UserCreatedBy", fields: [createdById], references: [id])
+  usersCreated User[]       @relation("UserCreatedBy")
+
+  sessions               Session[]        @relation("SessionUser")
+  emailTokens            EmailToken[]     @relation("EmailTokenUser")
+  subscriptionsCreated   Subscription[]   @relation("SubscriptionCreatedBy")
+  paymentAttemptsCreated PaymentAttempt[] @relation("PaymentAttemptCreatedBy")
+  memberships            Membership[]     @relation("MembershipUser")
+  membershipsCreated     Membership[]     @relation("MembershipCreatedBy")
+  siteAssignmentsCreated SiteAssignment[] @relation("SiteAssignmentCreatedBy")
+  projectsCreated        Project[]        @relation("ProjectCreatedBy")
+  sitesCreated           Site[]           @relation("SiteCreatedBy")
+  pickListOptionsCreated PickListOption[] @relation("PickListOptionCreatedBy")
+  visitsCreated          Visit[]          @relation("VisitCreatedBy")
+  entriesCreated         Entry[]          @relation("EntryCreatedBy")
+  entriesDeleted         Entry[]          @relation("EntryDeletedBy")
+  entryVersionsCreated   EntryVersion[]   @relation("EntryVersionCreatedBy")
+  photosCreated          Photo[]          @relation("PhotoCreatedBy")
+  reportsCreated         Report[]         @relation("ReportCreatedBy")
+  reportRevisionsCreated ReportRevision[] @relation("ReportRevisionCreatedBy")
+  reportEntriesCreated   ReportEntry[]    @relation("ReportEntryCreatedBy")
+  aiSuggestionsDecided   AiSuggestion[]   @relation("AiSuggestionDecidedBy")
+  reviewsCreated         Review[]         @relation("ReviewCreatedBy")
+  reportExportsCreated   ReportExport[]   @relation("ReportExportCreatedBy")
+  syncBatchesCreated     SyncBatch[]      @relation("SyncBatchCreatedBy")
+  syncOperationsCreated  SyncOperation[]  @relation("SyncOperationCreatedBy")
+  auditEvents            AuditEvent[]     @relation("AuditEventActor")
+
+  @@unique([organisationId, shortCode])
+  @@index([organisationId, status])
+}
+
+// Auth.js database session (see section 7, Auth and roles).
+model Session {
+  id             String    @id @default(uuid()) @db.Uuid
+  organisationId String    @db.Uuid
+  sessionToken   String    @unique // stored as SHA-256 of the cookie value
+  userId         String    @db.Uuid
+  expires        DateTime
+  deviceId       String? // client-generated, ties a session to a SyncBatch stream
+  userAgent      String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  createdById    String?   @db.Uuid
+  revokedAt      DateTime?
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  user         User         @relation("SessionUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([organisationId, userId])
+}
+
+// One row per user per project role. Org admins use User.isOrgAdmin.
+// The app blocks one user holding SUPERVISOR and REVIEWER or BACKUP_REVIEWER on the same project (FR-52).
+model Membership {
+  id             String    @id @default(uuid()) @db.Uuid
+  organisationId String    @db.Uuid
+  userId         String    @db.Uuid
+  projectId      String    @db.Uuid
+  role           Role
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  createdById    String    @db.Uuid
+  deletedAt      DateTime?
+  version        Int       @default(1)
+
+  organisation    Organisation     @relation(fields: [organisationId], references: [id])
+  user            User             @relation("MembershipUser", fields: [userId], references: [id])
+  project         Project          @relation(fields: [projectId], references: [id])
+  createdBy       User             @relation("MembershipCreatedBy", fields: [createdById], references: [id])
+  siteAssignments SiteAssignment[]
+
+  @@unique([userId, projectId, role])
+  @@index([organisationId, projectId, role])
+}
+
+// Which sites a supervisor membership can see (A1, A2).
+model SiteAssignment {
+  id             String    @id @default(uuid()) @db.Uuid
+  organisationId String    @db.Uuid
+  membershipId   String    @db.Uuid
+  siteId         String    @db.Uuid
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  createdById    String    @db.Uuid
+  deletedAt      DateTime?
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  membership   Membership   @relation(fields: [membershipId], references: [id])
+  site         Site         @relation(fields: [siteId], references: [id])
+  createdBy    User         @relation("SiteAssignmentCreatedBy", fields: [createdById], references: [id])
+
+  @@unique([membershipId, siteId])
+  @@index([organisationId, siteId])
+}
+
+// ---------- Projects, sites and pick-lists ----------
+
+model Project {
+  id             String    @id @default(uuid()) @db.Uuid
+  organisationId String    @db.Uuid
+  code           String // e.g. "RMD-2026-014"
+  name           String
+  clientName     String?
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  createdById    String    @db.Uuid
+  deletedAt      DateTime?
+  version        Int       @default(1)
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  createdBy    User         @relation("ProjectCreatedBy", fields: [createdById], references: [id])
+  memberships  Membership[]
+  sites        Site[]
+  visits       Visit[]
+  entries      Entry[]
+  reports      Report[]
+
+  @@unique([organisationId, code])
+  @@index([organisationId, isActive])
+}
+
+model Site {
+  id             String    @id @default(uuid()) @db.Uuid
+  organisationId String    @db.Uuid
+  projectId      String    @db.Uuid
+  code           String // e.g. "SITE-03"
+  name           String
+  timeZone       String    @default("Europe/London") // defines the Visit date
+  centreLat      Decimal?  @db.Decimal(9, 6)
+  centreLng      Decimal?  @db.Decimal(9, 6)
+  radiusMetres   Int?
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  createdById    String    @db.Uuid
+  deletedAt      DateTime?
+  version        Int       @default(1)
+
+  organisation    Organisation     @relation(fields: [organisationId], references: [id])
+  project         Project          @relation(fields: [projectId], references: [id])
+  createdBy       User             @relation("SiteCreatedBy", fields: [createdById], references: [id])
+  siteAssignments SiteAssignment[]
+  visits          Visit[]
+  entries         Entry[]
+  reports         Report[]
+
+  @@unique([projectId, code])
+  @@index([organisationId, projectId])
+}
+
+model PickListOption {
+  id             String       @id @default(uuid()) @db.Uuid
+  organisationId String       @db.Uuid
+  kind           PickListKind
+  label          String // e.g. "Excavation", "Completed", "m3"
+  sortOrder      Int          @default(0)
+  isIssue        Boolean      @default(false) // WORK_STATUS values that put an entry in "Issues and observations"
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  createdById    String       @db.Uuid
+  deletedAt      DateTime?
+  version        Int          @default(1)
+
+  organisation       Organisation     @relation(fields: [organisationId], references: [id])
+  createdBy          User             @relation("PickListOptionCreatedBy", fields: [createdById], references: [id])
+  activityVersions   EntryVersion[]   @relation("EntryVersionActivity")
+  workStatusVersions EntryVersion[]   @relation("EntryVersionWorkStatus")
+  unitVersions       EntryVersion[]   @relation("EntryVersionUnit")
+  weatherReports     ReportRevision[]
+
+  @@unique([organisationId, kind, label])
+  @@index([organisationId, kind, isActive])
+}
+
+// ---------- Capture ----------
+
+// One supervisor, one site, one local date in the site's time zone.
+model Visit {
+  id             String    @id @default(uuid()) @db.Uuid
+  organisationId String    @db.Uuid
+  projectId      String    @db.Uuid
+  siteId         String    @db.Uuid
+  visitDate      DateTime  @db.Date
+  firstEntryAt   DateTime? // occurredAt of the first entry
+  lastEntryAt    DateTime? // occurredAt of the last entry: the north-star start event for A16
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  createdById    String    @db.Uuid // the supervisor
+  deletedAt      DateTime?
+  version        Int       @default(1)
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  project      Project      @relation(fields: [projectId], references: [id])
+  site         Site         @relation(fields: [siteId], references: [id])
+  createdBy    User         @relation("VisitCreatedBy", fields: [createdById], references: [id])
+  entries      Entry[]
+  report       Report?
+
+  @@unique([siteId, createdById, visitDate])
+  @@index([organisationId, projectId, siteId, visitDate])
+}
+
+model Entry {
+  id                 String         @id @db.Uuid // client-generated UUID, idempotency key (A12)
+  organisationId     String         @db.Uuid
+  projectId          String         @db.Uuid
+  siteId             String         @db.Uuid
+  visitId            String         @db.Uuid
+  syncBatchId        String?        @db.Uuid
+  deviceCapturedAt   DateTime // device clock at capture (A14)
+  occurredAt         DateTime // EXIF time for gallery entries, else corrected save time; sets Visit and order (FR-11a)
+  occurredAtFromExif Boolean        @default(false)
+  deviceId           String // client-generated device id
+  deviceSeq          Int // gap-free counter per device (FR-24)
+  clockOffsetSec     Int            @default(0) // server minus device clock at sync
+  correctedAt        DateTime // deviceCapturedAt + clockOffsetSec
+  serverReceivedAt   DateTime       @default(now())
+  clockFlagged       Boolean        @default(false) // abs(offset) > 600 s (A14)
+  lat                Decimal?       @db.Decimal(9, 6)
+  lng                Decimal?       @db.Decimal(9, 6)
+  accuracyMetres     Int?
+  locationSource     LocationSource @default(NONE)
+  locationFlagged    Boolean        @default(true) // set with locationSource: true for NONE or outside site (A13)
+  outsideSite        Boolean        @default(false) // location more than site radius + 500 m (FR-12)
+  addedLate          Boolean        @default(false) // saved more than 2 hours after occurredAt (FR-11a)
+  currentVersionNo   Int            @default(1)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  createdById        String         @db.Uuid
+  deletedAt          DateTime?
+  deletedById        String?        @db.Uuid
+  version            Int            @default(1)
+
+  organisation Organisation    @relation(fields: [organisationId], references: [id])
+  project      Project         @relation(fields: [projectId], references: [id])
+  site         Site            @relation(fields: [siteId], references: [id])
+  visit        Visit           @relation(fields: [visitId], references: [id])
+  syncBatch    SyncBatch?      @relation(fields: [syncBatchId], references: [id])
+  createdBy    User            @relation("EntryCreatedBy", fields: [createdById], references: [id])
+  deletedBy    User?           @relation("EntryDeletedBy", fields: [deletedById], references: [id])
+  versions     EntryVersion[]
+  photos       Photo[]
+  operations   SyncOperation[]
+
+  @@unique([deviceId, deviceSeq])
+  @@index([organisationId, projectId, siteId, correctedAt])
+  @@index([organisationId, createdById, correctedAt])
+  @@index([visitId])
+}
+
+// Immutable content of an entry. A change writes a new row (A10).
+model EntryVersion {
+  id             String   @id @default(uuid()) @db.Uuid
+  organisationId String   @db.Uuid
+  entryId        String   @db.Uuid
+  versionNo      Int
+  activityTypeId String   @db.Uuid
+  workStatusId   String   @db.Uuid
+  quantity       Decimal? @db.Decimal(12, 3)
+  unitId         String?  @db.Uuid
+  noteText       String?  @db.VarChar(500)
+  changeReason   String?  @db.VarChar(200) // required from versionNo 2
+  createdAt      DateTime @default(now())
+  createdById    String   @db.Uuid
+
+  organisation  Organisation     @relation(fields: [organisationId], references: [id])
+  entry         Entry            @relation(fields: [entryId], references: [id])
+  activityType  PickListOption   @relation("EntryVersionActivity", fields: [activityTypeId], references: [id])
+  workStatus    PickListOption   @relation("EntryVersionWorkStatus", fields: [workStatusId], references: [id])
+  unit          PickListOption?  @relation("EntryVersionUnit", fields: [unitId], references: [id])
+  createdBy     User             @relation("EntryVersionCreatedBy", fields: [createdById], references: [id])
+  reportEntries ReportEntry[]
+  embeddings    EntryEmbedding[]
+
+  @@unique([entryId, versionNo])
+  @@index([organisationId, entryId])
+}
+
+model Photo {
+  id               String      @id @db.Uuid // client-generated UUID
+  organisationId   String      @db.Uuid
+  entryId          String      @db.Uuid
+  syncBatchId      String?     @db.Uuid
+  source           PhotoSource
+  storageKey       String      @unique // org/{orgId}/photos/{yyyy}/{mm}/{photoId}.jpg
+  thumbnailKey     String?
+  sha256           String      @db.Char(64) // of the compressed file, computed on device
+  byteSize         Int
+  widthPx          Int
+  heightPx         Int
+  mimeType         String      @default("image/jpeg")
+  exifTakenAt      DateTime? // read from the original before compression (A9)
+  exifLat          Decimal?    @db.Decimal(9, 6)
+  exifLng          Decimal?    @db.Decimal(9, 6)
+  originalByteSize Int?
+  status           PhotoStatus @default(PENDING_UPLOAD)
+  verifiedAt       DateTime?
+  failureReason    String?
+  removedReason    String?     @db.VarChar(200) // set when the supervisor removes a failed photo (FR-32)
+  sortOrder        Int         @default(0)
+  caption          String?     @db.VarChar(120) // accepted or typed caption
+  aiAssisted       Boolean     @default(false) // true only when an AI caption was accepted (with or without edit)
+  aiModelId        String?     @db.VarChar(100)
+  aiPromptVersion  String?     @db.VarChar(40)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  createdById      String      @db.Uuid
+  deletedAt        DateTime?
+  version          Int         @default(1)
+
+  organisation  Organisation   @relation(fields: [organisationId], references: [id])
+  entry         Entry          @relation(fields: [entryId], references: [id])
+  syncBatch     SyncBatch?     @relation(fields: [syncBatchId], references: [id])
+  createdBy     User           @relation("PhotoCreatedBy", fields: [createdById], references: [id])
+  aiSuggestions AiSuggestion[]
+
+  @@index([organisationId, entryId])
+  @@index([organisationId, status])
+}
+
+// ---------- Reports and review ----------
+
+// One report per Visit. Content lives in revisions.
+model Report {
+  id                 String       @id @default(uuid()) @db.Uuid
+  organisationId     String       @db.Uuid
+  projectId          String       @db.Uuid
+  siteId             String       @db.Uuid
+  visitId            String       @unique @db.Uuid
+  reportDate         DateTime     @db.Date
+  reference          String // project code / site code / date / supervisor shortCode, e.g. "RMD-2026-014/SITE-03/2026-11-12/JS"
+  status             ReportStatus @default(DRAFT)
+  currentRevisionNo  Int          @default(1)
+  approvedRevisionNo Int? // the latest approved, locked revision
+  submittedAt        DateTime? // latest submission
+  approvedAt         DateTime?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  createdById        String       @db.Uuid // the supervisor
+  deletedAt          DateTime?
+  version            Int          @default(1) // checked on every write (A12)
+
+  organisation Organisation     @relation(fields: [organisationId], references: [id])
+  project      Project          @relation(fields: [projectId], references: [id])
+  site         Site             @relation(fields: [siteId], references: [id])
+  visit        Visit            @relation(fields: [visitId], references: [id])
+  createdBy    User             @relation("ReportCreatedBy", fields: [createdById], references: [id])
+  revisions    ReportRevision[]
+
+  @@unique([organisationId, reference])
+  @@index([organisationId, projectId, siteId, reportDate])
+  @@index([organisationId, status, submittedAt])
+}
+
+// A revision is editable until submittedAt is set, then frozen.
+model ReportRevision {
+  id              String    @id @default(uuid()) @db.Uuid
+  organisationId  String    @db.Uuid
+  reportId        String    @db.Uuid
+  revisionNo      Int
+  summaryText     String?   @db.VarChar(2000)
+  aiAssisted      Boolean   @default(false) // summary came from an accepted AI suggestion
+  aiModelId       String?   @db.VarChar(100)
+  aiPromptVersion String?   @db.VarChar(40)
+  aiSourceMap     Json? // [{ sentence, entryVersionIds[] }] for the accepted summary
+  weatherId       String?   @db.Uuid
+  minutesSpent    Int? // optional self-reported minutes on this report (FR-32a)
+  submittedAt     DateTime?
+  snapshot        Json? // full rendered content frozen at submission
+  contentSha256   String?   @db.Char(64) // of snapshot, printed on exports
+  isLocked        Boolean   @default(false) // true once approved
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdById     String    @db.Uuid
+  deletedAt       DateTime?
+  version         Int       @default(1)
+
+  organisation  Organisation    @relation(fields: [organisationId], references: [id])
+  report        Report          @relation(fields: [reportId], references: [id])
+  weather       PickListOption? @relation(fields: [weatherId], references: [id])
+  createdBy     User            @relation("ReportRevisionCreatedBy", fields: [createdById], references: [id])
+  entries       ReportEntry[]
+  reviews       Review[]
+  exports       ReportExport[]
+  aiSuggestions AiSuggestion[]
+
+  @@unique([reportId, revisionNo])
+  @@index([organisationId, reportId])
+}
+
+// Links a revision to the exact EntryVersion it shows.
+model ReportEntry {
+  id               String    @id @default(uuid()) @db.Uuid
+  organisationId   String    @db.Uuid
+  reportRevisionId String    @db.Uuid
+  entryVersionId   String    @db.Uuid
+  position         Int
+  included         Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  createdById      String    @db.Uuid
+  deletedAt        DateTime?
+
+  organisation   Organisation   @relation(fields: [organisationId], references: [id])
+  reportRevision ReportRevision @relation(fields: [reportRevisionId], references: [id])
+  entryVersion   EntryVersion   @relation(fields: [entryVersionId], references: [id])
+  createdBy      User           @relation("ReportEntryCreatedBy", fields: [createdById], references: [id])
+
+  @@unique([reportRevisionId, entryVersionId])
+  @@index([organisationId, entryVersionId])
+}
+
+model Review {
+  id               String         @id @default(uuid()) @db.Uuid
+  organisationId   String         @db.Uuid
+  reportRevisionId String         @db.Uuid
+  decision         ReviewDecision
+  comment          String?        @db.VarChar(2000) // required for CHANGES_REQUESTED
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  createdById      String         @db.Uuid // the reviewer; never the report author (FR-40)
+  deletedAt        DateTime?
+
+  organisation   Organisation   @relation(fields: [organisationId], references: [id])
+  reportRevision ReportRevision @relation(fields: [reportRevisionId], references: [id])
+  createdBy      User           @relation("ReviewCreatedBy", fields: [createdById], references: [id])
+
+  @@unique([reportRevisionId]) // one decision per submitted revision
+  @@index([organisationId, createdById, createdAt])
+}
+
+model ReportExport {
+  id               String       @id @default(uuid()) @db.Uuid
+  organisationId   String       @db.Uuid
+  reportRevisionId String       @db.Uuid
+  format           ExportFormat
+  status           ExportStatus @default(QUEUED)
+  storageKey       String?
+  sha256           String?      @db.Char(64)
+  byteSize         Int?
+  jobId            String? // pg-boss job id
+  failureReason    String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  createdById      String       @db.Uuid
+  deletedAt        DateTime?
+
+  organisation   Organisation   @relation(fields: [organisationId], references: [id])
+  reportRevision ReportRevision @relation(fields: [reportRevisionId], references: [id])
+  createdBy      User           @relation("ReportExportCreatedBy", fields: [createdById], references: [id])
+
+  @@unique([reportRevisionId, format])
+  @@index([organisationId, status])
+}
+
+// ---------- Sync and audit ----------
+
+model SyncBatch {
+  id               String          @id @db.Uuid // client-generated, makes retries idempotent
+  organisationId   String          @db.Uuid
+  deviceId         String
+  clientAppVersion String
+  deviceClockAt    DateTime // device clock when the batch was sent
+  serverClockAt    DateTime        @default(now())
+  clockOffsetSec   Int // serverClockAt minus deviceClockAt
+  status           SyncBatchStatus @default(RECEIVED)
+  entryCount       Int             @default(0)
+  photoCount       Int             @default(0)
+  rejectedCount    Int             @default(0)
+  errorDetail      Json?
+  completedAt      DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  createdById      String          @db.Uuid
+  deletedAt        DateTime?
+
+  organisation Organisation    @relation(fields: [organisationId], references: [id])
+  createdBy    User            @relation("SyncBatchCreatedBy", fields: [createdById], references: [id])
+  entries      Entry[]
+  photos       Photo[]
+  operations   SyncOperation[]
+
+  @@index([organisationId, createdById, createdAt])
+  @@index([organisationId, status])
+}
+
+// One row per operation received, so repeated operations are detected (FR-24).
+model SyncOperation {
+  id             String              @id @db.Uuid // client-generated operation UUID
+  organisationId String              @db.Uuid
+  syncBatchId    String              @db.Uuid
+  type           SyncOperationType
+  entryId        String?             @db.Uuid
+  photoId        String?             @db.Uuid
+  result         SyncOperationResult
+  rejectReason   String? // e.g. "wrong user", "revision frozen"
+  appliedAt      DateTime            @default(now())
+  createdAt      DateTime            @default(now())
+  createdById    String              @db.Uuid
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  syncBatch    SyncBatch    @relation(fields: [syncBatchId], references: [id])
+  entry        Entry?       @relation(fields: [entryId], references: [id])
+  createdBy    User         @relation("SyncOperationCreatedBy", fields: [createdById], references: [id])
+
+  @@index([organisationId, syncBatchId])
+  @@index([organisationId, entryId])
+}
+
+// Append-only. No update or delete grants for the app role.
+model AuditEvent {
+  id             String      @id @default(uuid()) @db.Uuid
+  organisationId String      @db.Uuid
+  action         AuditAction
+  entityType     String // "Entry", "Report", "User", ...
+  entityId       String      @db.Uuid
+  before         Json?
+  after          Json?
+  ipAddress      String?
+  requestId      String?
+  createdAt      DateTime    @default(now())
+  createdById    String?     @db.Uuid // null for system jobs
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  createdBy    User?        @relation("AuditEventActor", fields: [createdById], references: [id])
+
+  @@index([organisationId, entityType, entityId, createdAt])
+  @@index([organisationId, createdById, createdAt])
+}
+
+// ---------- V2 AI (Part B; flags off until the accuracy gate passes) ----------
+
+// Every suggestion shown, so the monthly sample and acceptance rate (Part B) can be measured.
+model AiSuggestion {
+  id               String              @id @default(uuid()) @db.Uuid
+  organisationId   String              @db.Uuid
+  feature          AiFeature
+  photoId          String?             @db.Uuid // set for PHOTO_CAPTION
+  reportRevisionId String?             @db.Uuid // set for REPORT_SUMMARY
+  modelId          String              @db.VarChar(100)
+  promptVersion    String              @db.VarChar(40)
+  suggestedText    String              @db.VarChar(2000)
+  sourceMap        Json? // summary only: sentence to entryVersionIds
+  outcome          AiSuggestionOutcome @default(SHOWN)
+  finalText        String?             @db.VarChar(2000) // what the person saved, if accepted or edited
+  decidedById      String?             @db.Uuid
+  decidedAt        DateTime?
+  inputTokens      Int?
+  outputTokens     Int?
+  costMicroGbp     Int? // cost in millionths of a pound, for the 0.05 GBP gate
+  latencyMs        Int?
+  createdAt        DateTime            @default(now())
+
+  organisation   Organisation    @relation(fields: [organisationId], references: [id])
+  photo          Photo?          @relation(fields: [photoId], references: [id])
+  reportRevision ReportRevision? @relation(fields: [reportRevisionId], references: [id])
+  decidedBy      User?           @relation("AiSuggestionDecidedBy", fields: [decidedById], references: [id])
+
+  @@index([organisationId, feature, createdAt])
+  @@index([photoId])
+  @@index([reportRevisionId])
+}
+
+// One vector per EntryVersion per embedding model. Kept out of EntryVersion so
+// Prisma reads of core tables never touch the Unsupported column, and so a model
+// change is a new row set, not an ALTER of a core table.
+model EntryEmbedding {
+  id             String                     @id @default(uuid()) @db.Uuid
+  organisationId String                     @db.Uuid
+  entryVersionId String                     @db.Uuid
+  modelId        String                     @db.VarChar(100) // e.g. "gemini-embedding-001@768"
+  contentSha256  String                     @db.Char(64) // of the exact text embedded; skip re-embed if unchanged
+  embedding      Unsupported("vector(768)")
+  createdAt      DateTime                   @default(now())
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  entryVersion EntryVersion @relation(fields: [entryVersionId], references: [id], onDelete: Cascade)
+  // HNSW index is created in raw SQL in the migration (Prisma 5 cannot declare it).
+
+  @@unique([entryVersionId, modelId])
+  @@index([organisationId, modelId])
+}
+
+// ---------- Billing and account additions [v2.3, Q34] ----------
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  EXPIRED
+  CANCELLED
+}
+
+enum PaymentAttemptStatus {
+  INITIATED
+  PENDING
+  SUCCEEDED
+  FAILED
+  ABANDONED
+}
+
+enum EmailTokenPurpose {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+  INVITE
+}
+
+// One per organisation. currentPeriodEnd is when it expires (FR-63).
+model Subscription {
+  id                 String             @id @default(uuid()) @db.Uuid
+  organisationId     String             @unique @db.Uuid
+  status             SubscriptionStatus
+  seatCount          Int // active supervisors paid for (PRD 8)
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  graceEndsAt        DateTime?
+  provider           String // payment provider key, e.g. "flutterwave"
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  createdById        String?            @db.Uuid
+  version            Int                @default(1)
+
+  organisation Organisation     @relation(fields: [organisationId], references: [id])
+  createdBy    User?            @relation("SubscriptionCreatedBy", fields: [createdById], references: [id])
+  payments     Payment[]
+  attempts     PaymentAttempt[]
+
+  @@index([status, currentPeriodEnd])
+}
+
+// Money that really arrived. Append-only: no updatedAt, no deletedAt (FR-64).
+model Payment {
+  id                String   @id @default(uuid()) @db.Uuid
+  organisationId    String   @db.Uuid
+  subscriptionId    String   @db.Uuid
+  attemptId         String   @unique @db.Uuid
+  amountMinor       Int // minor units (pence, kobo), never a float
+  currency          String // ISO 4217
+  providerReference String   @unique // a repeated webhook cannot pay twice
+  periodStart       DateTime
+  periodEnd         DateTime
+  paidAt            DateTime
+  createdAt         DateTime @default(now())
+
+  organisation Organisation   @relation(fields: [organisationId], references: [id])
+  subscription Subscription   @relation(fields: [subscriptionId], references: [id])
+  attempt      PaymentAttempt @relation(fields: [attemptId], references: [id])
+
+  @@index([organisationId, paidAt])
+}
+
+// Every payment try, written before the redirect to the provider (FR-64).
+model PaymentAttempt {
+  id                String               @id @default(uuid()) @db.Uuid
+  organisationId    String               @db.Uuid
+  subscriptionId    String               @db.Uuid
+  createdById       String               @db.Uuid
+  txRef             String               @unique // our reference, sent to the provider
+  amountMinor       Int
+  currency          String
+  seatCount         Int
+  status            PaymentAttemptStatus @default(INITIATED)
+  failureReason     String? // provider code or message, never card data
+  providerReference String?
+  startedAt         DateTime             @default(now())
+  lastEventAt       DateTime?
+  version           Int                  @default(1)
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  subscription Subscription @relation(fields: [subscriptionId], references: [id])
+  createdBy    User         @relation("PaymentAttemptCreatedBy", fields: [createdById], references: [id])
+  payment      Payment?
+
+  @@index([status, startedAt])
+  @@index([organisationId, startedAt])
+}
+
+// Email verification codes, reset links and invite links. Only the SHA-256 is stored.
+model EmailToken {
+  id             String            @id @default(uuid()) @db.Uuid
+  organisationId String            @db.Uuid
+  userId         String            @db.Uuid
+  purpose        EmailTokenPurpose
+  tokenHash      String            @unique
+  expiresAt      DateTime
+  attempts       Int               @default(0)
+  usedAt         DateTime?
+  createdAt      DateTime          @default(now())
+
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  user         User         @relation("EmailTokenUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose])
+}
+
+// Rate-limit counts in PostgreSQL so they survive a restart (decision 8). Not tenant data.
+model RateLimitCounter {
+  key        String   @id // e.g. "sign-in:account:<userId>" or "sign-up:ip:<sha256 of ip>"
+  count      Int
+  windowEnds DateTime
+
+  @@index([windowEnds])
+}

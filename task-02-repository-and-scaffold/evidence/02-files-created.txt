@@ -1,0 +1,34 @@
+EXHAUSTIVE LIST OF FILES CREATED DURING SCAFFOLDING
+=====================================================
+
+1. task-02-repository-and-scaffold/README.md
+   - High-level overview of scaffolding, server diagnostics, false-success testing, and information design.
+
+2. task-02-repository-and-scaffold/docs/scaffold-prompt.md
+   - Documenting prompt evolution from informal first draft to strict production execution boundary.
+
+3. task-02-repository-and-scaffold/docs/model-choices.md
+   - Deliberate evaluation of Antigravity (planning/deliberation) vs faster coding models.
+
+4. task-02-repository-and-scaffold/docs/performance-note.md
+   - First load time benchmarking, millisecond analysis, and optimization targets.
+
+5. task-02-repository-and-scaffold/docs/false-success.md
+   - Detailed write-up of the false-success vulnerability when backend connection is severed.
+
+6. task-02-repository-and-scaffold/docs/readme-test.md
+   - Testing README onboarding on a clean third-party engineer.
+
+7. task-02-repository-and-scaffold/docs/working-tree.md
+   - Technical analysis of the Git pipeline from local staging to production.
+
+8. task-02-repository-and-scaffold/docs/information-design.md
+   - Information design decisions: head configuration, body pruning, clamp() responsive typography.
+
+9. task-02-repository-and-scaffold/docs/defects.md
+   - Two real defects in scaffold code with line references and production costs.
+
+10. task-02-repository-and-scaffold/docs/interview-answers.md
+    - Answers to all 15 technical interview defence questions.
+
+11. task-02-repository-and-scaffold/evidence/ (all diagnostic logs and terminal outputs).

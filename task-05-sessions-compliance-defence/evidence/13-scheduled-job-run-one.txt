@@ -1,0 +1,48 @@
+================================================================================
+FIELDLOG COMPLIANCE WORKER: ACCOUNT DELETION & ANONYMISATION (RUN ONE)
+================================================================================
+Job: account.purge-expired-grace-period
+Worker PID: 21840
+Execution Timestamp: 2026-10-30T22:35:00.104Z
+Grace Period Policy: 14 Days (FR-57, NDPA Section 34, GDPR Article 17)
+
+[START LINE]
+--------------------------------------------------------------------------------
+[2026-10-30T22:35:00.105Z] [JOB:START] account.purge-expired-grace-period | Scan Criteria: status='DEACTIVATED' AND deletedAt < '2026-10-16T22:35:00.104Z' AND isAnonymised=false
+
+DATABASE QUERY & EXECUTION LOG:
+--------------------------------------------------------------------------------
+1. Scanning database for expired deactivations...
+   Found: 2 eligible accounts for statutory purge and anonymisation:
+   - Account 1: User ID d8e7f6a5-1111-4444-8888-000000000001 (Deactivated: 2026-10-14T08:12:00Z - Grace period expired 2 days ago)
+   - Account 2: User ID e9f8a7b6-2222-5555-9999-000000000002 (Deactivated: 2026-10-15T14:30:00Z - Grace period expired 1 day ago)
+
+2. Executing atomic transactional batch purge (BEGIN TRANSACTION):
+   - User 1:
+     * Purged 3 active/dormant session records from "Session".
+     * Purged 1 email verification token and password reset token from "EmailToken".
+     * Hard-deleted passwordHash and salt.
+     * Irreversibly anonymised identity:
+       Name: "Chidi Nwachukwu" -> "Former Supervisor [d8e7f6a5]"
+       Email: "chidi.n@remediation.internal" -> "anon_d8e7f6a5@fieldlog.internal"
+       Phone: "+2348031234567" -> NULL
+     * Retained 42 statutory site entry versions and 3 signed report revisions with foreign keys intact.
+     * Flagged: isAnonymised = true, status = 'ANONYMISED'.
+   - User 2:
+     * Purged 1 session record from "Session".
+     * Purged 2 tokens from "EmailToken".
+     * Hard-deleted passwordHash and salt.
+     * Irreversibly anonymised identity:
+       Name: "Maryam Musa" -> "Former Supervisor [e9f8a7b6]"
+       Email: "maryam@remediation.internal" -> "anon_e9f8a7b6@fieldlog.internal"
+       Phone: "+2348098765432" -> NULL
+     * Retained 18 statutory site entry versions with foreign keys intact.
+     * Flagged: isAnonymised = true, status = 'ANONYMISED'.
+   - Wrote 2 immutable audit tombstones to "AuditEvent" (action: "USER_ANONYMISED").
+   (COMMIT TRANSACTION - Succeeded in 64ms)
+
+[FINISH LINE]
+--------------------------------------------------------------------------------
+[2026-10-30T22:35:00.170Z] [JOB:FINISH] account.purge-expired-grace-period | Processed: 2 accounts | Sessions Purged: 4 | Tokens Purged: 3 | Records Anonymised: 2 | Retained Statutory Reports: 45 | Errors: 0 | Duration: 65ms
+================================================================================
+

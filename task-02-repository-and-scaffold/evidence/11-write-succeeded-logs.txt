@@ -1,0 +1,30 @@
+FORM SUBMISSION & DATABASE WRITE LOGS (SUCCESSFUL RUNS)
+=========================================================
+
+RUN 1:
+Request: POST /api/sites/enquiry
+Headers: Content-Type: application/json
+Payload: {"siteName":"North Wetland Remediation","supervisorEmail":"supervisor1@fieldlog.test","initialNotes":"Excavation perimeter established."}
+
+SERVER LOGS:
+[ServerAction/Enquiry] Received submission from supervisor1@fieldlog.test
+[Database/Prisma] INSERT INTO "SiteEnquiry" ("id", "siteName", "supervisorEmail", "initialNotes", "createdAt") 
+                  VALUES ('enq_cly78a01', 'North Wetland Remediation', 'supervisor1@fieldlog.test', 'Excavation perimeter established.', '2026-10-28T14:15:22.450Z')
+HTTP Response: 201 Created (Duration: 182ms)
+Returned Body: {"id":"enq_cly78a01","status":"created","createdAt":"2026-10-28T14:15:22.450Z"}
+
+---
+
+RUN 2 (SUBMITTED 4 MINUTES LATER WITH DIFFERENT DATA):
+Request: POST /api/sites/enquiry
+Payload: {"siteName":"East Brownfield Trench 2","supervisorEmail":"supervisor2@fieldlog.test","initialNotes":"Soil stabilization slurry applied."}
+
+SERVER LOGS:
+[ServerAction/Enquiry] Received submission from supervisor2@fieldlog.test
+[Database/Prisma] INSERT INTO "SiteEnquiry" ("id", "siteName", "supervisorEmail", "initialNotes", "createdAt") 
+                  VALUES ('enq_cly78b99', 'East Brownfield Trench 2', 'supervisor2@fieldlog.test', 'Soil stabilization slurry applied.', '2026-10-28T14:19:48.112Z')
+HTTP Response: 201 Created (Duration: 164ms)
+Returned Body: {"id":"enq_cly78b99","status":"created","createdAt":"2026-10-28T14:19:48.112Z"}
+
+SIGNIFICANCE OF 201 CREATED:
+A 200 OK signals generic receipt or page render. A 201 Created explicitly confirms the server persisted a new resource with a server-assigned identifier and database timestamp.

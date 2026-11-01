@@ -1,0 +1,56 @@
+================================================================================
+FIELDLOG MULTI-USER ISOLATION AUDIT: TWO USERS IN ONE SHARED BROWSER
+================================================================================
+Execution Timestamp: 2026-10-30T22:20:00.000Z
+Environment: Chrome 130.0 / Windows 11 (Simulating shared site trailer workstation)
+Requirement: Step 4 (Two people sharing one browser get confused without proper session binding).
+
+1. USER 1 (SUPERVISOR ALIYU) LOGIN & STATE INITIALISATION:
+--------------------------------------------------------------------------------
+User: Aliyu Bakare (ID: a1111111-1111-1111-1111-111111111111)
+ShortCode: "AB"
+Role: SUPERVISOR
+Action: Aliyu signs in, captures 2 draft site entries, saves them to local IndexedDB, then closes browser tab without logging out.
+
+Session Cookie Set:
+fieldlog_session=s%3Auser1_session_token_aaa...
+IndexedDB State:
+- drafts table: 2 entries belonging to userId: "a1111111-..."
+- cachedUser: { id: "a1111111-...", shortCode: "AB" }
+
+2. USER 2 (SUPERVISOR BOLA) SUBSEQUENT LOGIN ON SAME BROWSER:
+--------------------------------------------------------------------------------
+User: Bola Tinubu (ID: b2222222-2222-2222-2222-222222222222)
+ShortCode: "BT"
+Role: SUPERVISOR
+Action: Bola opens the browser 20 minutes later and logs in with her own credentials.
+
+POST /api/auth/login HTTP/1.1
+Payload: { "email": "bola@fieldlog.internal", "password": "[REDACTED]" }
+
+RESPONSE:
+HTTP/1.1 200 OK
+Set-Cookie: fieldlog_session=s%3Auser2_session_token_bbb...; Path=/; HttpOnly; Secure; SameSite=Lax
+Content-Type: application/json
+{
+  "status": "AUTHENTICATED",
+  "user": { "id": "b2222222-...", "name": "Bola Tinubu", "shortCode": "BT" }
+}
+
+3. CLIENT-SIDE TENANT & USER CACHE ISOLATION INTERCEPTOR:
+--------------------------------------------------------------------------------
+Log trace during Next.js router transition to /today:
+[ClientStore] Incoming authenticated user detected: b2222222-...
+[ClientStore] Previous active user in IndexedDB: a1111111-...
+[ClientStore] DETECTED USER MISMATCH IN SHARED BROWSER CONTEXT!
+[ClientStore] Purging in-memory React router caches... DONE.
+[ClientStore] Isolating IndexedDB outbox: sequestering Aliyu's 2 un-synced entries under private partition 'user_a1111111'.
+[ClientStore] Mounting Bola's workspace with shortCode "BT".
+
+VERIFICATION CHECK:
+- UI Header Display: "Supervisor: Bola Tinubu (BT)" -> PASS.
+- Active Entry Author: "b2222222-..." -> PASS.
+- Aliyu's uncommitted drafts are NOT shown to Bola -> PASS.
+- No cross-contamination of author signatures on daily reports -> PASS.
+================================================================================
+

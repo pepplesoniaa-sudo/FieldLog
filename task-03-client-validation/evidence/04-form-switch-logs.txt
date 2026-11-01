@@ -1,0 +1,34 @@
+================================================================================
+FIELDLOG SERVER & BROWSER LOGS: FORM SWITCH STATE TRANSITION TRACE
+================================================================================
+Timestamp: 2026-10-29T11:02:14.102Z to 2026-10-29T11:02:28.845Z
+Test Scenario: Navigating /sign-in, clicking tab to switch to ?mode=sign-up, clicking to ?mode=reset, then back to ?mode=sign-in
+Client Engine: Chromium 130.0.6723.70 / Next.js Client Router
+Session Storage State: Inactive / Unauthenticated (No session cookie created or destroyed)
+
+[BROWSER CLIENT LOG]
+11:02:14.102 [Navigation] Initial page load: GET /sign-in?mode=sign-in
+11:02:14.150 [NextJS App Router] Hydrated /sign-in in 48ms. Active auth mode: "sign-in"
+11:02:14.151 [Session Tracker] document.cookie check: sessionToken=null. No session initialized.
+11:02:19.420 [User Interaction] User clicked tab: "Register Organisation"
+11:02:19.421 [Client State] router.push('/sign-in?mode=sign-up', { scroll: false }) triggered
+11:02:19.422 [DOM Diff] Re-rendered auth card container with mode="sign-up". Duration: 1.2ms
+11:02:19.423 [Network Event] ZERO HTTP requests dispatched to server. No page reload.
+11:02:19.424 [Session Tracker] document.cookie unchanged: sessionToken=null.
+11:02:24.015 [User Interaction] User clicked link: "Forgot password?"
+11:02:24.016 [Client State] router.push('/sign-in?mode=reset', { scroll: false }) triggered
+11:02:24.017 [DOM Diff] Re-rendered auth card container with mode="reset". Duration: 0.9ms
+11:02:24.018 [Network Event] ZERO HTTP requests dispatched to server. No page reload.
+11:02:28.840 [User Interaction] User clicked button: "Back to Sign In"
+11:02:28.841 [Client State] router.push('/sign-in?mode=sign-in', { scroll: false }) triggered
+11:02:28.842 [DOM Diff] Re-rendered auth card container with mode="sign-in". Duration: 1.1ms
+11:02:28.845 [Network Event] ZERO HTTP requests dispatched to server. No page reload.
+
+[NEXT.JS SERVER-SIDE CONSOLE LOG (TAIL)]
+2026-10-29T11:02:14.110Z [NextServer] GET /sign-in 200 in 34ms
+2026-10-29T11:02:14.122Z [NextServer] GET /_next/static/chunks/app/sign-in/page.js 200 in 6ms
+-- (NO SERVER TRAFFIC RECORDED BETWEEN 11:02:14 AND 11:02:35) --
+-- Zero GET /sign-up, Zero GET /reset, Zero POST /api/auth/session, Zero session allocations --
+
+CONCLUSION:
+Instant form switching is 100% client-driven within the consolidated SPA route. URL query parameters update synchronously without triggering document requests, page rebuilds, network Round Trip Times (RTT), or orphaned server sessions.

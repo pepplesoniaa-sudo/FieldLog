@@ -1,0 +1,25 @@
+RECOVERY 2: PORT CONFLICT RESOLVED
+==================================
+
+1. COMMAND USED TO IDENTIFY PROCESS ID (PID) HOLDING PORT 3000:
+PowerShell:
+Get-NetTCPConnection -LocalPort 3000 | Select-Object LocalAddress, LocalPort, OwningProcess, State
+
+OUTPUT:
+LocalAddress LocalPort OwningProcess State
+------------ --------- ------------- -----
+0.0.0.0           3000         14288 Listen
+
+2. COMMAND USED TO TERMINATE CONFLICTING PROCESS:
+Stop-Process -Id 14288 -Force
+
+3. CLEAN SERVER STARTUP:
+$ npm run dev
+
+> fieldlog@0.1.0 dev
+> next dev -p 3000
+
+  ▲ Next.js 15.0.1
+  - Local:        http://localhost:3000
+ ✓ Starting...
+ ✓ Ready in 1890ms

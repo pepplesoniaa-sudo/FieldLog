@@ -1,0 +1,39 @@
+================================================================================
+FIELDLOG BENCHMARK TIMING & ATTACK ARITHMETIC: ADAPTIVE HASHING VS SHA-256
+================================================================================
+Execution Timestamp: 2026-10-29T22:47:11.000Z
+Test Script: scratch/test_hashing_benchmarks.mjs
+Benchmark Methodology: 100 consecutive iterations on identical machine hardware
+Plaintext Password: "RemediationSiteSupervisor2026!"
+
+1. EMPIRICAL BENCHMARK NUMBERS (FROM THIS MACHINE):
+--------------------------------------------------------------------------------
+SHA-256 Average Duration:             0.01515 ms per hash
+SHA-256 Single-Core Throughput:       65,994 hashes / second
+
+Adaptive (scrypt / bcrypt) Duration:  82.88500 ms per hash
+Adaptive Single-Core Throughput:      12 hashes / second
+
+Ratio: SHA-256 is 5,470 times FASTER than adaptive hashing on this CPU.
+
+2. ATTACK ARITHMETIC ON COMMODITY CRACKING HARDWARE:
+--------------------------------------------------------------------------------
+Consider an 8-GPU offline password cracking rig (e.g. 8x NVIDIA RTX 4090):
+- Peak SHA-256 Hashcat Throughput:       ~50,000,000,000 hashes / sec (50 GH/s)
+- Peak Adaptive / scrypt Throughput:     ~200,000 hashes / sec (200 kH/s)
+
+Target: Brute-forcing an 8-character lowercase password keyspace:
+  Keyspace = 26^8 = 208,827,064,576 combinations (~208.8 billion)
+
+Arithmetic for SHA-256:
+  Time = 208,827,064,576 / 50,000,000,000 = 4.17 seconds!
+  An adversary who dumps a SHA-256 user table recovers all 8-character passwords in under 5 SECONDS.
+
+Arithmetic for Adaptive Hashing (scrypt / bcrypt):
+  Time = 208,827,064,576 / 200,000 = 1,044,135 seconds = 12.08 DAYS!
+  With a 10-character password (95^10 = 5.98 x 10^19 combinations), cracking requires over 9.4 MILLION YEARS.
+
+3. THE CORE INVERSION:
+--------------------------------------------------------------------------------
+You hash once per user login, so an 82ms computation costs you nothing measurable and causes zero user-perceptible delay. An attacker attempting offline brute-force must hash billions of times, so slowing the computation down costs the application nothing and costs the attacker everything.
+================================================================================

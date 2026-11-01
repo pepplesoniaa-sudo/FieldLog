@@ -1,0 +1,19 @@
+================================================================================
+FIELDLOG CRYPTOGRAPHIC EVIDENCE: HASH TWICE WITH SAME PASSWORD
+================================================================================
+Execution Timestamp: 2026-10-29T22:47:11.000Z
+Test Script: scratch/test_hashing_benchmarks.mjs
+Hardware: Host Machine Intel Core i7 / x64 Windows
+Password Plaintext: "RemediationSiteSupervisor2026!"
+
+OUTPUT 1:
+$scrypt$ln=14,r=8,p=1$U2Y33cEJTH4+V8hItpUT6A==$EYpGaAJVSa98ra5u2MH3Bjrk7w5IErpHPZHoMMfa39yE18sYpVhxOH22uV2bjGR4jDAD/Xnqy9KnuskHzKh3Pw==
+
+OUTPUT 2:
+$scrypt$ln=14,r=8,p=1$fz/W9NVzYEbcWimdKD2pXw==$rsy+lgpCfHkFZdzX8qeLEsSdTHQrOuzpL5b2jfa/VzlV534lOMgdVdlxvgeSzu+3O+ZVIlxnu7jo7/DssPWy4w==
+
+IDENTICAL OUTPUTS?: false (Outputs completely differ in every byte)
+
+EXPLANATION IN ONE LINE:
+Each invocation generates a cryptographically fresh, unique 16-byte random salt, producing completely different ciphertext even when hashing the identical plaintext.
+================================================================================

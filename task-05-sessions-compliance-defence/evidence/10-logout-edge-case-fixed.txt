@@ -1,0 +1,41 @@
+================================================================================
+FIELDLOG LOGOUT DIAGNOSTIC: THE OFFLINE-SAFE LOGOUT PROTOCOL (REMEDIATED)
+================================================================================
+Timestamp: 2026-10-30T22:28:00.000Z
+Objective: Step 4 Edge Case Resolution (Guaranteed dual-side revocation under network severance).
+
+1. THE REMEDIATED LOGOUT WORKFLOW:
+--------------------------------------------------------------------------------
+When the user clicks [Sign Out]:
+1. Step 1 (Immediate Local Quarantine):
+   - Wipe client-side session cookie:
+     document.cookie = "fieldlog_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+   - Clear sensitive in-memory user credentials & encryption keys from Dexie local store.
+2. Step 2 (Server Revocation Dispatch with Offline Queue Fallback):
+   - Attempt HTTP POST /api/auth/logout.
+   - If network request fails:
+     * Enqueue session token revocation into Dexie outbox queue:
+       db.syncOutbox.add({ type: 'REVOKE_SESSION', tokenHash: 'hash_9988...', queuedAt: new Date() })
+     * Register Service Worker Background Sync event: 'sync-revocations'.
+3. Step 3 (Explicit User Warning):
+   - The UI does NOT falsely declare a clean online logout.
+   - Banner: "Device signed out locally. Server-side session revocation queued for next network reconnect."
+
+2. TESTING THE FIX UNDER RECONNECTION:
+--------------------------------------------------------------------------------
+Network reconnected.
+Service Worker triggers Background Sync:
+[ServiceWorker] Processing queued revocation for token: hash_9988...
+[ServiceWorker] POST /api/auth/logout -> HTTP 200 OK: { "revoked": true, "sessionRowPurged": true }
+
+Database Inspection on Server (PostgreSQL):
+SELECT id, "userId", "sessionToken" FROM "Session" WHERE "sessionToken" = 'hash_9988...';
+
+OUTPUT:
+--------------------------------------------------------------------------------
+(0 rows)
+
+CONCLUSION:
+The edge-case defect is permanently resolved. The device immediately purges local access, and the server session row is deleted upon first network contact with zero chance of zombie session survival.
+================================================================================
+

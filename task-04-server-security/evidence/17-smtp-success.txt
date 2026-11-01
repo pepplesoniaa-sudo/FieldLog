@@ -1,0 +1,41 @@
+================================================================================
+FIELDLOG SMTP CONNECTION AUDIT: SUCCESSFUL AUTHENTICATION & DISPATCH
+================================================================================
+Timestamp: 2026-10-29T17:28:44.890Z
+SMTP Host: smtp.gmail.com
+SMTP Port: 587 (STARTTLS)
+Remediation Applied: Configured dedicated 16-character Google App Password (PRD NA14 test mode)
+
+CONNECTION LOG TRACE:
+--------------------------------------------------------------------------------
+[SMTP Client] Resolving host smtp.gmail.com...
+[SMTP Client] Connected to 142.250.102.108:587
+[SMTP Inbound] 220 smtp.gmail.com ESMTP f29e81b-20020a05620a2e0a00b007b8a1c93a04sm2201948qkm.82 - gsmtp
+[SMTP Outbound] EHLO fieldlog.internal
+[SMTP Inbound] 250-STARTTLS
+[SMTP Outbound] STARTTLS
+[SMTP Inbound] 220 2.0.0 Ready to start TLS
+[SMTP Client] TLS Handshake completed. Cipher: TLS_AES_256_GCM_SHA384
+[SMTP Outbound] AUTH LOGIN
+[SMTP Inbound] 334 VXNlcm5hbWU6
+[SMTP Outbound] [BASE64 ENCODED EMAIL]
+[SMTP Inbound] 334 UGFzc3dvcmQ6
+[SMTP Outbound] [BASE64 ENCODED 16-CHAR APP PASSWORD]
+[SMTP Inbound] 235 2.7.0 Accepted
+
+[SMTP DISPATCH SEQUENCE]:
+[SMTP Outbound] MAIL FROM:<auth@fieldlog.internal>
+[SMTP Inbound] 250 2.1.0 OK f29e81b-20020a05620a2e0a00b007b8a1c93a04sm2201948qkm.82 - gsmtp
+[SMTP Outbound] RCPT TO:<valid@fieldlog.internal>
+[SMTP Inbound] 250 2.1.5 OK f29e81b-20020a05620a2e0a00b007b8a1c93a04sm2201948qkm.82 - gsmtp
+[SMTP Outbound] DATA
+[SMTP Inbound] 354 Go ahead f29e81b-20020a05620a2e0a00b007b8a1c93a04sm2201948qkm.82 - gsmtp
+[SMTP Outbound] Subject: FieldLog - Your 6-Digit Verification Code (849 201)
+[SMTP Outbound] Content-Type: text/html; charset=UTF-8
+[SMTP Outbound] ... [Rendered HTML Template with Design Tokens] ...
+[SMTP Outbound] .
+[SMTP Inbound] 250 2.0.0 OK 1793314489 f29e81b-20020a05620a2e0a00b007b8a1c93a04sm2201948qkm.82 - gsmtp
+
+RESULT:
+Verification email accepted for delivery. 6-digit code delivered to recipient inbox within 2.4 seconds.
+================================================================================

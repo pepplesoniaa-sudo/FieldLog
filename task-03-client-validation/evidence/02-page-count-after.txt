@@ -1,0 +1,26 @@
+================================================================================
+FIELDLOG ROUTE AUDIT: PAGE COUNT AFTER AUTH ROUTE CONSOLIDATION (SPA PATTERN)
+================================================================================
+Timestamp: 2026-10-29T10:45:00.000Z
+Scope: Application App Router Page Components After Consolidation
+Methodology: Directory tree scan of distinct page.tsx entrypoints in /app
+
+PAGES IN APPLICATION (AFTER COLLAPSE):
+--------------------------------------------------------------------------------
+ 1. app/page.tsx                                (Marketing Landing Page)
+ 2. app/sign-in/page.tsx                        (Consolidated Auth SPA: ?mode=sign-in|sign-up|reset)
+ 3. app/(app)/today/page.tsx                    (Supervisor Dashboard)
+ 4. app/(app)/capture/page.tsx                  (Field Capture Form)
+ 5. app/(app)/entry/page.tsx                    (Entry View & History)
+ 6. app/(app)/visit/page.tsx                    (Visit Preview)
+ 7. app/(app)/reports/page.tsx                  (Reports List)
+ 8. app/(app)/reports/[reportId]/page.tsx       (Report Detail & Revisions)
+ 9. app/(app)/review/page.tsx                   (Reviewer Queue)
+10. app/(app)/search/page.tsx                   (Search & Filter)
+11. app/(admin)/admin/page.tsx                  (Organisation Administration)
+12. app/(admin)/admin/billing/page.tsx          (Billing & Seats)
+
+TOTAL DISTINCT PAGE ROUTES (AFTER): 12 Pages
+Net Reduction: -2 route files eliminated (-14.3% page count reduction)
+Auth Footprint: Exactly 1 unified route (/sign-in) hosting sign-in, sign-up, and password reset via zero-reload URL query parameter state switching (?mode=).
+Preserved Isolation: Dedicated token landing routes (e.g. /invite/[token] and /reset/[token]) remain isolated per security architecture specifications.

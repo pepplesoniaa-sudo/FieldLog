@@ -1,0 +1,39 @@
+================================================================================
+FIELDLOG MIGRATION DEFECT TRACE: ADDING REQUIRED COLUMN TO POPULATED TABLE
+================================================================================
+Timestamp: 2026-10-29T15:10:02.110Z
+Scenario: Attempting to add a NOT NULL column (`supervisorLicenseId String`) without a default value to the existing populated `User` table (containing 400 active rows).
+
+SCHEMA CHANGE ATTEMPTED:
+--------------------------------------------------------------------------------
+model User {
+  id                  String   @id @default(uuid())
+  email               String   @unique
+  supervisorLicenseId String   // <-- REQUIRED COLUMN ADDED TO POPULATED TABLE
+  ...
+}
+
+COMMAND EXECUTED BY OPERATOR:
+--------------------------------------------------------------------------------
+$ npx prisma migrate dev --name add_license_required
+
+MIGRATION FAILURE TRACE:
+--------------------------------------------------------------------------------
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "fieldlog_dev", schema "public" at "localhost:5432"
+
+Applying migration `20261029151002_add_license_required`
+
+Error: P3006
+Migration `20261029151002_add_license_required` failed to apply cleanly to the shadow database. 
+Error:
+Database error code: 23502
+Database error:
+ERROR: column "supervisorLicenseId" of relation "User" contains null values
+
+ALTER TABLE "User" ADD COLUMN "supervisorLicenseId" TEXT NOT NULL;
+^
+DETAIL: Failed to add the required column without a default value. This is not possible if the table is not empty. Existing 400 rows in "User" have no value for this column.
+
+MIGRATION ABORTED. ZERO DATABASE CHANGES COMMITTED.
+================================================================================

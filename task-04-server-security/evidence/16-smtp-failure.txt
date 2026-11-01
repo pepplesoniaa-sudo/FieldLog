@@ -1,0 +1,36 @@
+================================================================================
+FIELDLOG SMTP CONNECTION AUDIT: INITIAL DELIVERY FAILURE
+================================================================================
+Timestamp: 2026-10-29T17:15:30.120Z
+SMTP Host: smtp.gmail.com
+SMTP Port: 587 (STARTTLS)
+Credentials Used: Standard Google Account Password
+
+CONNECTION LOG TRACE:
+--------------------------------------------------------------------------------
+[SMTP Client] Resolving host smtp.gmail.com...
+[SMTP Client] Connected to 142.250.102.108:587
+[SMTP Inbound] 220 smtp.gmail.com ESMTP d2e1a72f8-20020a05620a2e0a00b007b8a1c93a04sm2198038qkm.82 - gsmtp
+[SMTP Outbound] EHLO fieldlog.internal
+[SMTP Inbound] 250-smtp.gmail.com at your service
+[SMTP Inbound] 250-STARTTLS
+[SMTP Outbound] STARTTLS
+[SMTP Inbound] 220 2.0.0 Ready to start TLS
+[SMTP Client] TLS Handshake completed. Cipher: TLS_AES_256_GCM_SHA384
+[SMTP Outbound] AUTH LOGIN
+[SMTP Inbound] 334 VXNlcm5hbWU6
+[SMTP Outbound] [BASE64 ENCODED EMAIL]
+[SMTP Inbound] 334 UGFzc3dvcmQ6
+[SMTP Outbound] [BASE64 ENCODED STANDARD PASSWORD]
+
+[SMTP FAILURE RESPONSE]:
+535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8 https://support.google.com/mail/?p=BadCredentials d2e1a72f8-20020a05620a2e0a00b007b8a1c93a04sm2198038qkm.82 - gsmtp
+
+Error: Invalid login: 535-5.7.8 Username and Password not accepted.
+code: 'EAUTH'
+response: '535-5.7.8 Username and Password not accepted.'
+
+ROOT CAUSE:
+Google SMTP rejects standard account passwords because 2-Factor Authentication (2FA) is enforced on modern Google accounts. Standard account passwords cannot authenticate directly via SMTP.
+================================================================================

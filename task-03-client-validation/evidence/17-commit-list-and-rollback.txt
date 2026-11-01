@@ -1,0 +1,35 @@
+================================================================================
+FIELDLOG VERSION CONTROL AUDIT: ROLLBACK WITHOUT HALLUCINATION
+================================================================================
+Timestamp: 2026-10-29T11:45:00.000Z
+Objective: Documenting deterministic version rollback using exact Git SHA commit identifiers instead of natural language guessing.
+
+1. COMMIT LIST (EXACT LOG TRACE)
+--------------------------------------------------------------------------------
+$ git log --oneline -n 6
+fbe13a9 (HEAD -> main) repo: README and five task folders per the course brief
+d678a4c rules: reset, lockout, sign-up and verification rules; new billing rules
+148fa99 skills: add build-one-fr, route-access-tests, offline-flow-test, rules-drift-check
+46a129f docs: AGENTS.md points to PRD v2.3, adds billing scope and expiry rule
+30730eb docs: PRD v2.3 adds sign-up, verification and test-mode subscription (FR-61 to FR-64)
+e198b20 chore: initial commit
+
+2. SCENARIO OF THE REGRETTED CHANGE
+--------------------------------------------------------------------------------
+During form development, an experimental change was made in a commit attempting to hide all form labels in favor of HTML placeholders to save vertical space. This broke accessibility (WCAG 3.3.2) and screen reader label association.
+
+3. COMMIT IDENTIFIER CHOSEN
+--------------------------------------------------------------------------------
+Target Commit to revert: fbe13a9
+Target Commit to restore: d678a4c
+
+4. EXACT COMMAND SPECIFIED
+--------------------------------------------------------------------------------
+$ git revert --no-edit fbe13a9
+Or to restore a specific file directly from the known good commit:
+$ git checkout d678a4c -- app/sign-in/page.tsx
+
+5. WHY NAMING THE COMMIT ID IS SAFER THAN NATURAL LANGUAGE
+--------------------------------------------------------------------------------
+Naming an exact 40-character SHA hash (or unique 7-character short hash) is cryptographically deterministic: Git points to an immutable Merkle tree snapshot containing the exact byte-for-byte state of every file. In contrast, describing a rollback in natural language ("undo the last two versions" or "remove the changes to the labels") forces an AI agent or developer to guess what changed, which frequently introduces silent regressions, partial restorations, and hallucinated code deletions.
+================================================================================

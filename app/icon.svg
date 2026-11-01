@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Background Shield / Field Container with Brand Primary 40 -->
+  <rect width="32" height="32" rx="7" fill="#1B5EAD"/>
+  
+  <!-- Subtle inner gradient border for depth -->
+  <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" stroke="#78ACFF" stroke-opacity="0.3"/>
+  
+  <!-- Geometric Stylized "F" representing FieldLog & Soil Horizons -->
+  <!-- Vertical Stalk -->
+  <rect x="7" y="7" width="4.5" height="18" rx="2" fill="#FFFFFF"/>
+  
+  <!-- Upper Horizon Bar (Primary Surface) -->
+  <rect x="11.5" y="7" width="13.5" height="4.5" rx="2" fill="#FFFFFF"/>
+  
+  <!-- Middle Horizon Bar (Excavation/Containment Horizon) -->
+  <rect x="11.5" y="14" width="9.5" height="4" rx="2" fill="#D6E3FF"/>
+  
+  <!-- Active Environmental Verification Node (GPS/Status Green Accent) -->
+  <circle cx="23" cy="22" r="3" fill="#10B981"/>
+  <circle cx="23" cy="22" r="4.5" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.9"/>
+</svg>

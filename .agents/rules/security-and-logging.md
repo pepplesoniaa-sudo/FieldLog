@@ -4,7 +4,7 @@ description: Use when adding or changing HTTP security headers or CSP (next.conf
 ---
 # Security headers, audit and logging
 
-AGENTS.md already says no email provider or error tracker is chosen and to ask before installing one. security-baseline.md lists what must never be logged. This file holds only what it leaves out.
+AGENTS.md already names Gmail SMTP for testing in the app's region (NA14), and states no error tracker is chosen. security-baseline.md lists what must never be logged. This file holds only what it leaves out.
 
 ## Headers
 - HSTS max-age is 1 year (31536000). Do not add preload or includeSubDomains without Rox. Why: preload is very hard to undo once browsers ship it. [PRD 7.7]
@@ -12,8 +12,8 @@ AGENTS.md already says no email provider or error tracker is chosen and to ask b
 - Whatever form the CSP takes: img-src allows self, blob:, data: and the storage domain; connect-src allows self and the storage domain. AI calls are server-side, so no Google domain goes in the CSP. Read the storage domain from configuration; it is not chosen yet (Q3). Why: the browser PUTs photos straight to storage, so a missing connect-src entry blocks every upload. [PRD 7.7, PRD 7.13]
 
 ## Audit
-- Write an AuditEvent for each action in NFR-16 (every create, change, submit, decision, export, and sign-out with unsynced work), plus the AI and retention events their FRs name, in the same transaction as the change. Why: if the audit write is separate and fails, the change has no record. [NFR-16, FR-05, FR-55]
-- Use only existing AuditAction values. Never add one; if none fits, ask Rox. Why: the schema is locked. [AGENTS.md How to work, PRD 10]
+- Write an AuditEvent for each action in NFR-16 (every create, change, submit, decision, export, and sign-out with unsynced work), plus the AI, billing, auth, and retention events their FRs name, in the same transaction as the change. Why: if the audit write is separate and fails, the change has no record. [NFR-16, FR-05, FR-55, FR-61, FR-64]
+- Use only existing AuditAction values in PRD section 10. Never add one; if none fits, ask Rox. Why: the schema is locked. [AGENTS.md How to work, PRD 10]
 - SIGN_OUT_WITH_UNSYNCED is written when that user next syncs, not at sign-out. Why: at sign-out the phone may be offline. [FR-05]
 - Never write code that updates or deletes an AuditEvent. The rule that the app's database role has no UPDATE or DELETE on it is SQL that Rox runs: write the statement in your reply and do not run it. [PRD 7.7, database-safety.md]
 

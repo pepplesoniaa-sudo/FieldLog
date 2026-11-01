@@ -1,0 +1,15 @@
+DELIBERATE BREAKAGE 3: 404 AND BLANK PAGE
+=========================================
+
+REQUEST & LOG:
+GET /capture-form 404 Not Found - 32ms
+
+BROWSER STATE:
+The screen rendered a blank page with Next.js default 404 message:
+"404 | This page could not be found."
+
+DIAGNOSTIC PROCESS BEFORE ASKING AN AGENT FOR HELP:
+1. Checked URL Bar: Confirmed route entered was '/capture-form'.
+2. Checked File Structure: Inspected 'app/' directory to determine if a route handler or page component existed matching '/capture-form'. Observed only 'app/page.tsx' (root) and 'app/api/health/route.ts'.
+3. Checked App Router Conventions: In Next.js App Router, routes require a directory with a 'page.tsx' inside it (e.g., 'app/capture/page.tsx', not a root file named 'capture-form.tsx').
+4. Checked Server Terminal: Confirmed no compilation error occurred; the server correctly dispatched a 404 handler.

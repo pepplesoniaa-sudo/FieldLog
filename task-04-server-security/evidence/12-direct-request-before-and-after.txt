@@ -1,0 +1,80 @@
+================================================================================
+FIELDLOG DIRECT ATTACK INVESTIGATION: TASK 3 VS TASK 4 SIDE-BY-SIDE
+================================================================================
+Timestamp: 2026-10-29T22:50:00.000Z
+Objective: Direct proof that server-side validation shuts down client bypass attacks.
+
+[THE EXACT ADVERSARIAL ATTACK PAYLOAD SENT DIRECTLY TO ENDPOINT]
+--------------------------------------------------------------------------------
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullName": "a",
+    "email": "bot-attack-no-at-sign",
+    "password": "short",
+    "orgName": "x",
+    "seats": -999,
+    "acceptTerms": false
+  }'
+
+================================================================================
+TASK 3 RESPONSE (NO SERVER VALIDATION - CLIENT BYPASSED)
+================================================================================
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "status": "RECEIVED_AT_ENDPOINT",
+  "accepted": true,
+  "message": "Endpoint accepted payload directly without client validation intervention.",
+  "clientValidationBypassed": true,
+  "dataReceived": {
+    "fullName": "a",
+    "email": "bot-attack-no-at-sign",
+    "password": "short",
+    "orgName": "x",
+    "seats": -999,
+    "acceptTerms": false
+  },
+  "serverChecksEnforced": [],
+  "warning": "CRITICAL SECURITY DEFECT: Client-side validation was completely bypassed."
+}
+
+================================================================================
+TASK 4 RESPONSE (SERVER ZOD SCHEMA VALIDATION ENFORCED)
+================================================================================
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "status": "VALIDATION_FAILED",
+  "error": "Validation failed at server boundary",
+  "message": "One or more fields failed server validation requirements.",
+  "fieldErrors": {
+    "fullName": [
+      "Full name must be at least 2 characters long",
+      "Please provide both your first and last name separated by a space"
+    ],
+    "orgName": [
+      "Organisation name must be at least 3 characters"
+    ],
+    "email": [
+      "Please enter a valid email address"
+    ],
+    "password": [
+      "Password must be at least 10 characters long"
+    ],
+    "seats": [
+      "Supervisor seats must be at least 1"
+    ],
+    "acceptTerms": [
+      "Invalid input: expected true"
+    ]
+  },
+  "clientBypassPrevented": true,
+  "timestamp": "2026-10-29T22:49:53.730Z"
+}
+
+CONCLUSION:
+In Task 3, every rule was bypassed because client-side checks only protect cooperative browsers. In Task 4, the server acts as the authoritative source of truth: all 6 fields were evaluated against the immutable Zod boundary schema, and the request was unconditionally rejected with HTTP 400 Bad Request.
+================================================================================

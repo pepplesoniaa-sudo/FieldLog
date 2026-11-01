@@ -1,0 +1,26 @@
+DELIBERATE DATABASE SEVERANCE & WRITE FAILURE LOGS
+===================================================
+
+ACTION:
+DATABASE_URL renamed to INVALID_DATABASE_URL (pointing to unreachable host localhost:5433).
+
+REQUEST:
+POST /api/sites/enquiry
+Payload: {"siteName":"South Sump Dredging","supervisorEmail":"supervisor3@fieldlog.test","initialNotes":"Dredging pump test."}
+
+SERVER TERMINAL LOGS:
+[ServerAction/Enquiry] Attempting database write...
+PrismaClientInitializationError: Can't reach database server at `localhost:5433`
+Please make sure your database server is running at `localhost:5433`.
+  code: 'P1001'
+  clientVersion: '5.20.0'
+[Error] Unhandled rejection: connection refused.
+HTTP Response: 500 Internal Server Error (Duration: 3012ms)
+
+---
+
+WHAT THE UNPROTECTED CLIENT INTERFACE SHOWED BEFORE FIX:
+The client-side form had a generic try/catch block that caught the fetch error, omitted the response status check, and unconditionally triggered `setSuccess(true)`.
+The browser screen displayed:
+"Thank you! Your site enquiry has been logged successfully."
+While in reality, the database rejected the connection and zero rows were created.

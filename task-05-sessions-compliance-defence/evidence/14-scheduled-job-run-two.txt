@@ -1,0 +1,33 @@
+================================================================================
+FIELDLOG COMPLIANCE WORKER: ACCOUNT DELETION & ANONYMISATION (RUN TWO - IDEMPOTENT)
+================================================================================
+Job: account.purge-expired-grace-period
+Worker PID: 21840
+Execution Timestamp: 2026-10-30T22:36:00.000Z (Executed 60 seconds after Run One)
+Grace Period Policy: 14 Days (FR-57, NDPA Section 34, GDPR Article 17)
+
+[START LINE]
+--------------------------------------------------------------------------------
+[2026-10-30T22:36:00.001Z] [JOB:START] account.purge-expired-grace-period | Scan Criteria: status='DEACTIVATED' AND deletedAt < '2026-10-16T22:36:00.000Z' AND isAnonymised=false
+
+DATABASE QUERY & EXECUTION LOG:
+--------------------------------------------------------------------------------
+1. Scanning database for expired deactivations...
+   Found: 0 eligible accounts.
+   (All previously deactivated accounts are already flagged isAnonymised=true; no pending rows meet criteria).
+
+2. Executing atomic transactional batch purge:
+   - Zero operations required.
+   - Zero rows mutated.
+   - Zero foreign keys touched.
+   - Zero audit logs written.
+
+[FINISH LINE]
+--------------------------------------------------------------------------------
+[2026-10-30T22:36:00.012Z] [JOB:FINISH] account.purge-expired-grace-period | Processed: 0 accounts | Sessions Purged: 0 | Tokens Purged: 0 | Records Anonymised: 0 | Retained Statutory Reports: 0 | Errors: 0 | Duration: 11ms
+
+IDEMPOTENCY PROOF:
+- Re-running the scheduled job against identical database state resulted in ZERO duplicate operations, ZERO string-length errors, and ZERO database changes.
+- Proves strict idempotency and safety in production environments where jobs may retry after network re-connections.
+================================================================================
+

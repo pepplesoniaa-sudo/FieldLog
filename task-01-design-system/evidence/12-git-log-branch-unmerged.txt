@@ -1,0 +1,13 @@
+TEST PROTOCOL: DELIBERATE REGRESSION BRANCH
+Branch created: regression/broken-token-ref
+Action: Hardcoded .btn-primary background to raw hex #E11D48 (crimson) instead of var(--color-primary), then changed root brand token to #047857 (emerald).
+Observation: While all other components adapted dynamically to the new emerald brand token, the broken button remained static crimson, proving that bypassing token referencing instantly fractures interface cohesion.
+
+BRANCH CLEANUP:
+Branch 'regression/broken-token-ref' deleted without merging into master.
+
+GIT LOG VERIFICATION:
+Command: git log --graph --oneline -n 10
+Result:
+* master commit history shows linear progression with zero merge commits from 'regression/broken-token-ref'.
+* Proves the deliberate regression branch was abandoned and deleted without contaminating production or main trunk.

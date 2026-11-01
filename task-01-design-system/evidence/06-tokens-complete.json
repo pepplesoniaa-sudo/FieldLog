@@ -1,0 +1,172 @@
+{
+  "typography": {
+    "fontFamily": "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+    "fontFamilyMono": "ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace",
+    "display": {
+      "large": { "fontSize": "57px", "lineHeight": "80px", "fontWeight": "700", "letterSpacing": "-0.5px" },
+      "medium": { "fontSize": "45px", "lineHeight": "63px", "fontWeight": "700", "letterSpacing": "-0.4px" },
+      "small": { "fontSize": "36px", "lineHeight": "50px", "fontWeight": "700", "letterSpacing": "-0.3px" }
+    },
+    "headline": {
+      "large": { "fontSize": "32px", "lineHeight": "45px", "fontWeight": "600", "letterSpacing": "-0.25px" },
+      "medium": { "fontSize": "28px", "lineHeight": "39px", "fontWeight": "600", "letterSpacing": "-0.2px" },
+      "small": { "fontSize": "24px", "lineHeight": "34px", "fontWeight": "600", "letterSpacing": "0px" }
+    },
+    "title": {
+      "large": { "fontSize": "22px", "lineHeight": "31px", "fontWeight": "600", "letterSpacing": "0px" },
+      "medium": { "fontSize": "16px", "lineHeight": "24px", "fontWeight": "600", "letterSpacing": "0.15px" },
+      "small": { "fontSize": "14px", "lineHeight": "21px", "fontWeight": "600", "letterSpacing": "0.1px" }
+    },
+    "body": {
+      "large": { "fontSize": "16px", "lineHeight": "24px", "fontWeight": "400", "letterSpacing": "0.25px" },
+      "medium": { "fontSize": "14px", "lineHeight": "21px", "fontWeight": "400", "letterSpacing": "0.25px" },
+      "small": { "fontSize": "12px", "lineHeight": "18px", "fontWeight": "400", "letterSpacing": "0.4px" }
+    },
+    "label": {
+      "large": { "fontSize": "14px", "lineHeight": "21px", "fontWeight": "600", "letterSpacing": "0.1px" },
+      "medium": { "fontSize": "12px", "lineHeight": "19px", "fontWeight": "600", "letterSpacing": "0.5px" },
+      "small": { "fontSize": "11px", "lineHeight": "18px", "fontWeight": "600", "letterSpacing": "0.5px" }
+    }
+  },
+  "elevation": {
+    "soft": "0 2px 6px 0 rgba(27, 94, 173, 0.08)",
+    "medium": "0 6px 16px -2px rgba(27, 94, 173, 0.12), 0 2px 4px -1px rgba(27, 94, 173, 0.06)",
+    "hard": "0 12px 28px -4px rgba(27, 94, 173, 0.18), 0 4px 8px -2px rgba(27, 94, 173, 0.08)"
+  },
+  "color": {
+    "palette": {
+      "primary": {
+        "0": "#000000",
+        "10": "#001b3d",
+        "20": "#003062",
+        "30": "#00468a",
+        "40": "#1b5ead",
+        "50": "#3d77c8",
+        "60": "#5a91e4",
+        "70": "#78acff",
+        "80": "#a8c8ff",
+        "90": "#d6e3ff",
+        "95": "#ecf0ff",
+        "98": "#f9f9ff",
+        "99": "#fdfbff",
+        "100": "#ffffff"
+      },
+      "secondary": {
+        "0": "#000000",
+        "10": "#0b1d2c",
+        "20": "#213242",
+        "30": "#384859",
+        "40": "#4f6072",
+        "50": "#68798b",
+        "60": "#8192a6",
+        "70": "#9badc1",
+        "80": "#b7c8dd",
+        "90": "#d2e4f9",
+        "95": "#e8f2ff",
+        "98": "#f7f9ff",
+        "100": "#ffffff"
+      },
+      "neutral": {
+        "0": "#000000",
+        "10": "#1a1c1e",
+        "20": "#2f3033",
+        "30": "#45474a",
+        "40": "#5d5e61",
+        "50": "#76777a",
+        "60": "#909094",
+        "70": "#ababae",
+        "80": "#c6c6ca",
+        "90": "#e2e2e6",
+        "95": "#f1f0f4",
+        "98": "#f9f9fc",
+        "100": "#ffffff"
+      },
+      "neutralVariant": {
+        "0": "#000000",
+        "10": "#171c22",
+        "20": "#2c3137",
+        "30": "#42474e",
+        "40": "#5a5f66",
+        "50": "#72777f",
+        "60": "#8c9199",
+        "70": "#a7abb3",
+        "80": "#c2c7cf",
+        "90": "#dee3eb",
+        "95": "#edf1f9",
+        "98": "#f7f9ff",
+        "100": "#ffffff"
+      },
+      "error": {
+        "10": "#410002",
+        "20": "#690004",
+        "30": "#930009",
+        "40": "#ba1a1a",
+        "80": "#ffb4ab",
+        "90": "#ffdad5",
+        "100": "#ffffff"
+      },
+      "warning": {
+        "10": "#2d1600",
+        "20": "#4a2800",
+        "30": "#6a3c00",
+        "40": "#8b5000",
+        "80": "#ffb871",
+        "90": "#ffdcbe",
+        "100": "#ffffff"
+      },
+      "success": {
+        "10": "#002107",
+        "20": "#003911",
+        "30": "#00531c",
+        "40": "#066e28",
+        "80": "#80da87",
+        "90": "#9bf7a1",
+        "100": "#ffffff"
+      },
+      "info": {
+        "10": "#2a0054",
+        "20": "#460085",
+        "30": "#6400b9",
+        "40": "#7f2cd8",
+        "80": "#d9b9ff",
+        "90": "#eedbff",
+        "100": "#ffffff"
+      }
+    },
+    "role": {
+      "surface": "#f9f9fc",
+      "surfaceContainerLow": "#f4f3f7",
+      "surfaceContainer": "#eeedf1",
+      "surfaceContainerHigh": "#e8e8eb",
+      "surfaceContainerHighest": "#e2e2e6",
+      "onSurface": "#1a1c1e",
+      "onSurfaceVariant": "#42474e",
+      "primary": "#1b5ead",
+      "onPrimary": "#ffffff",
+      "primaryContainer": "#d6e3ff",
+      "onPrimaryContainer": "#001b3d",
+      "secondary": "#4f6072",
+      "onSecondary": "#ffffff",
+      "secondaryContainer": "#d2e4f9",
+      "onSecondaryContainer": "#0b1d2c",
+      "outline": "#72777f",
+      "outlineVariant": "#c2c7cf",
+      "error": "#ba1a1a",
+      "onError": "#ffffff",
+      "errorContainer": "#ffdad5",
+      "onErrorContainer": "#410002",
+      "warning": "#8b5000",
+      "onWarning": "#ffffff",
+      "warningContainer": "#ffdcbe",
+      "onWarningContainer": "#2d1600",
+      "success": "#066e28",
+      "onSuccess": "#ffffff",
+      "successContainer": "#9bf7a1",
+      "onSuccessContainer": "#002107",
+      "info": "#7f2cd8",
+      "onInfo": "#ffffff",
+      "infoContainer": "#eedbff",
+      "onInfoContainer": "#2a0054"
+    }
+  }
+}

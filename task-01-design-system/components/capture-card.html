@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FieldLog - Field Capture Entry</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <style>
+    body {
+      background-color: var(--color-surface-variant);
+      color: var(--color-on-surface);
+      font-family: var(--font-family-base);
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .capture-card {
+      background-color: var(--color-surface);
+      border-radius: 12px;
+      box-shadow: var(--shadow-medium);
+      padding: 1.5rem;
+      max-width: 480px;
+      width: 100%;
+      border: 1px solid var(--color-outline-variant);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .badge-status {
+      background-color: var(--color-success-container);
+      color: var(--color-on-success-container);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .badge-flag {
+      background-color: var(--color-warning-container);
+      color: var(--color-on-warning-container);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
+
+    .photo-placeholder {
+      background-color: var(--color-surface-variant);
+      border: 2px dashed var(--color-outline);
+      border-radius: 8px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-on-surface-variant);
+      margin: 1rem 0;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: var(--shadow-soft);
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--palette-primary-30);
+    }
+  </style>
+</head>
+<body>
+
+  <article class="capture-card">
+    <div class="card-header">
+      <span class="type-label-small badge-status">SYNCED & VERIFIED</span>
+      <span class="type-label-small badge-flag">GPS DRIFT: 14M</span>
+    </div>
+    
+    <h2 class="type-title-large">North Wetland Excavation</h2>
+    <p class="type-body-medium" style="color: var(--color-on-surface-variant); margin: 0.5rem 0 1rem 0;">
+      Excavated contaminated heavy clay layer at trench 4B. Depth reached 2.2m. Soil stabilization treatment applied.
+    </p>
+
+    <div class="photo-placeholder type-body-small">
+      [ Verified JPEG Photo — SHA-256 Validated ]
+    </div>
+
+    <button type="button" class="btn-primary type-label-large">
+      Add Supervisor Observation
+    </button>
+  </article>
+
+</body>
+</html>

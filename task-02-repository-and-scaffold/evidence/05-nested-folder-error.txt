@@ -1,0 +1,15 @@
+DELIBERATE BREAKAGE 1: THE NESTED FOLDER ERROR
+==============================================
+
+$ npm run dev
+
+npm error code ENOENT
+npm error syscall open
+npm error path C:\Users\HP\Desktop\FieldLog\package.json
+npm error errno -4058
+npm error enoent Could not read package.json: This is most likely not a problem with npm itself.
+npm error enoent npm can't find a package.json file in your current directory.
+
+CAUSE:
+The agent scaffolded the Next.js application inside a nested subdirectory 'C:\Users\HP\Desktop\FieldLog\fieldlog\' instead of the project root 'C:\Users\HP\Desktop\FieldLog\'.
+Running commands from root failed because package.json resided one level deeper.

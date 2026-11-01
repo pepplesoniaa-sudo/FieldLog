@@ -1,0 +1,465 @@
+/* Automatically generated from fieldlog.tokens.json - do not edit directly */
+/**
+ * Design System Tokens
+ * Automatically generated from fieldlog.tokens.json
+ * 
+ * Color System Architecture:
+ * 1. Primitive Colors: The foundational palette. These should NOT be used directly in UI components.
+ * 2. Color Roles: Semantic colors referencing primitives. These MUST be used directly in UI components.
+ */
+
+:root {
+
+  /* ==========================================================================
+     Primitive Colors (Foundation - Not to be applied directly to UI)
+     ========================================================================== */
+  --primitive-colors-primary-color-palette-primary0: #000000;
+  --primitive-colors-primary-color-palette-primary10: #001b3d;
+  --primitive-colors-primary-color-palette-primary20: #003062;
+  --primitive-colors-primary-color-palette-primary30: #00468a;
+  --primitive-colors-primary-color-palette-primary40: #1b5ead;
+  --primitive-colors-primary-color-palette-primary50: #3d77c8;
+  --primitive-colors-primary-color-palette-primary60: #5a91e4;
+  --primitive-colors-primary-color-palette-primary70: #78acff;
+  --primitive-colors-primary-color-palette-primary80: #a8c8ff;
+  --primitive-colors-primary-color-palette-primary90: #d6e3ff;
+  --primitive-colors-primary-color-palette-primary95: #ecf0ff;
+  --primitive-colors-primary-color-palette-primary98: #f9f9ff;
+  --primitive-colors-primary-color-palette-primary99: #fdfbff;
+  --primitive-colors-primary-color-palette-primary100: #ffffff;
+  --primitive-colors-secondary-color-palette-secondary0: #000000;
+  --primitive-colors-secondary-color-palette-secondary10: #0b1d2c;
+  --primitive-colors-secondary-color-palette-secondary20: #213242;
+  --primitive-colors-secondary-color-palette-secondary30: #384859;
+  --primitive-colors-secondary-color-palette-secondary40: #4f6072;
+  --primitive-colors-secondary-color-palette-secondary50: #68798b;
+  --primitive-colors-secondary-color-palette-secondary60: #8192a6;
+  --primitive-colors-secondary-color-palette-secondary70: #9badc1;
+  --primitive-colors-secondary-color-palette-secondary80: #b7c8dd;
+  --primitive-colors-secondary-color-palette-secondary90: #d2e4f9;
+  --primitive-colors-secondary-color-palette-secondary95: #e8f2ff;
+  --primitive-colors-secondary-color-palette-secondary98: #f7f9ff;
+  --primitive-colors-secondary-color-palette-secondary99: #fcfcff;
+  --primitive-colors-secondary-color-palette-secondary100: #ffffff;
+  --primitive-colors-tertiary-color-palette-tertiary0: #000000;
+  --primitive-colors-tertiary-color-palette-tertiary10: #00201b;
+  --primitive-colors-tertiary-color-palette-tertiary20: #003730;
+  --primitive-colors-tertiary-color-palette-tertiary30: #005047;
+  --primitive-colors-tertiary-color-palette-tertiary40: #006b5e;
+  --primitive-colors-tertiary-color-palette-tertiary50: #1d8577;
+  --primitive-colors-tertiary-color-palette-tertiary60: #40a090;
+  --primitive-colors-tertiary-color-palette-tertiary70: #5ebbab;
+  --primitive-colors-tertiary-color-palette-tertiary80: #7ad7c6;
+  --primitive-colors-tertiary-color-palette-tertiary90: #97f3e2;
+  --primitive-colors-tertiary-color-palette-tertiary95: #b5fff0;
+  --primitive-colors-tertiary-color-palette-tertiary98: #e5fff8;
+  --primitive-colors-tertiary-color-palette-tertiary99: #f3fffb;
+  --primitive-colors-tertiary-color-palette-tertiary100: #ffffff;
+  --primitive-colors-neutral-color-palette-neutral0: #000000;
+  --primitive-colors-neutral-color-palette-neutral4: #0c0e11;
+  --primitive-colors-neutral-color-palette-neutral6: #121316;
+  --primitive-colors-neutral-color-palette-neutral10: #1a1c1e;
+  --primitive-colors-neutral-color-palette-neutral12: #1e2022;
+  --primitive-colors-neutral-color-palette-neutral17: #282a2d;
+  --primitive-colors-neutral-color-palette-neutral20: #2f3033;
+  --primitive-colors-neutral-color-palette-neutral22: #333538;
+  --primitive-colors-neutral-color-palette-neutral24: #38393c;
+  --primitive-colors-neutral-color-palette-neutral30: #45474a;
+  --primitive-colors-neutral-color-palette-neutral40: #5d5e61;
+  --primitive-colors-neutral-color-palette-neutral50: #76777a;
+  --primitive-colors-neutral-color-palette-neutral60: #909094;
+  --primitive-colors-neutral-color-palette-neutral70: #ababae;
+  --primitive-colors-neutral-color-palette-neutral80: #c6c6ca;
+  --primitive-colors-neutral-color-palette-neutral87: #dadadd;
+  --primitive-colors-neutral-color-palette-neutral90: #e2e2e6;
+  --primitive-colors-neutral-color-palette-neutral92: #e8e8eb;
+  --primitive-colors-neutral-color-palette-neutral94: #eeedf1;
+  --primitive-colors-neutral-color-palette-neutral95: #f1f0f4;
+  --primitive-colors-neutral-color-palette-neutral96: #f4f3f7;
+  --primitive-colors-neutral-color-palette-neutral98: #f9f9fc;
+  --primitive-colors-neutral-color-palette-neutral99: #fcfcff;
+  --primitive-colors-neutral-color-palette-neutral100: #ffffff;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant0: #000000;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant10: #171c22;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant20: #2c3137;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant30: #42474e;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant40: #5a5f66;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant50: #72777f;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant60: #8c9199;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant70: #a7abb3;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant80: #c2c7cf;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant90: #dee3eb;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant95: #edf1f9;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant98: #f7f9ff;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant99: #fcfcff;
+  --primitive-colors-neutral-variant-color-palette-neutral-variant100: #ffffff;
+  --primitive-colors-error-color-palette-error0: #000000;
+  --primitive-colors-error-color-palette-error10: #410002;
+  --primitive-colors-error-color-palette-error20: #690004;
+  --primitive-colors-error-color-palette-error30: #930009;
+  --primitive-colors-error-color-palette-error40: #ba1a1a;
+  --primitive-colors-error-color-palette-error50: #de372f;
+  --primitive-colors-error-color-palette-error60: #ff5449;
+  --primitive-colors-error-color-palette-error70: #ff897d;
+  --primitive-colors-error-color-palette-error80: #ffb4ab;
+  --primitive-colors-error-color-palette-error90: #ffdad5;
+  --primitive-colors-error-color-palette-error95: #ffedea;
+  --primitive-colors-error-color-palette-error98: #fff8f7;
+  --primitive-colors-error-color-palette-error99: #fffbff;
+  --primitive-colors-error-color-palette-error100: #ffffff;
+  --primitive-colors-success-color-palette-success0: #000000;
+  --primitive-colors-success-color-palette-success10: #002107;
+  --primitive-colors-success-color-palette-success20: #003911;
+  --primitive-colors-success-color-palette-success30: #00531c;
+  --primitive-colors-success-color-palette-success40: #066e28;
+  --primitive-colors-success-color-palette-success50: #2d883f;
+  --primitive-colors-success-color-palette-success60: #4aa256;
+  --primitive-colors-success-color-palette-success70: #65be6e;
+  --primitive-colors-success-color-palette-success80: #80da87;
+  --primitive-colors-success-color-palette-success90: #9bf7a1;
+  --primitive-colors-success-color-palette-success95: #c7ffc5;
+  --primitive-colors-success-color-palette-success98: #ebffe6;
+  --primitive-colors-success-color-palette-success99: #f6fff1;
+  --primitive-colors-success-color-palette-success100: #ffffff;
+  --primitive-colors-warning-color-palette-warning0: #000000;
+  --primitive-colors-warning-color-palette-warning10: #2d1600;
+  --primitive-colors-warning-color-palette-warning20: #4a2800;
+  --primitive-colors-warning-color-palette-warning30: #6a3c00;
+  --primitive-colors-warning-color-palette-warning40: #8b5000;
+  --primitive-colors-warning-color-palette-warning50: #ae6600;
+  --primitive-colors-warning-color-palette-warning60: #ce7e1f;
+  --primitive-colors-warning-color-palette-warning70: #ed9839;
+  --primitive-colors-warning-color-palette-warning80: #ffb871;
+  --primitive-colors-warning-color-palette-warning90: #ffdcbe;
+  --primitive-colors-warning-color-palette-warning95: #ffeee1;
+  --primitive-colors-warning-color-palette-warning98: #fff8f5;
+  --primitive-colors-warning-color-palette-warning99: #fffbff;
+  --primitive-colors-warning-color-palette-warning100: #ffffff;
+  --primitive-colors-info-color-palette-info0: #000000;
+  --primitive-colors-info-color-palette-info10: #2a0054;
+  --primitive-colors-info-color-palette-info20: #460085;
+  --primitive-colors-info-color-palette-info30: #6400b9;
+  --primitive-colors-info-color-palette-info40: #7f2cd8;
+  --primitive-colors-info-color-palette-info50: #994cf3;
+  --primitive-colors-info-color-palette-info60: #b070ff;
+  --primitive-colors-info-color-palette-info70: #c596ff;
+  --primitive-colors-info-color-palette-info80: #d9b9ff;
+  --primitive-colors-info-color-palette-info90: #eedbff;
+  --primitive-colors-info-color-palette-info95: #f9edff;
+  --primitive-colors-info-color-palette-info98: #fff7ff;
+  --primitive-colors-info-color-palette-info99: #fffbff;
+  --primitive-colors-info-color-palette-info100: #ffffff;
+
+  /* ==========================================================================
+     Color Roles (To be applied directly to UI components)
+     ========================================================================== */
+  --color-roles-surface: var(--primitive-colors-neutral-color-palette-neutral98);
+  --color-roles-surface-container-lowest: var(--primitive-colors-neutral-color-palette-neutral100);
+  --color-roles-surface-container-low: var(--primitive-colors-neutral-color-palette-neutral96);
+  --color-roles-surface-container: var(--primitive-colors-neutral-color-palette-neutral94);
+  --color-roles-surface-container-high: var(--primitive-colors-neutral-color-palette-neutral92);
+  --color-roles-surface-container-highest: var(--primitive-colors-neutral-color-palette-neutral90);
+  --color-roles-on-surface: var(--primitive-colors-neutral-color-palette-neutral10);
+  --color-roles-on-surface-variant: var(--primitive-colors-neutral-variant-color-palette-neutral-variant30);
+  --color-roles-outline: var(--primitive-colors-neutral-variant-color-palette-neutral-variant50);
+  --color-roles-outline-variant: var(--primitive-colors-neutral-variant-color-palette-neutral-variant80);
+  --color-roles-inverse-surface: var(--primitive-colors-neutral-color-palette-neutral20);
+  --color-roles-inverse-on-surface: var(--primitive-colors-neutral-color-palette-neutral95);
+  --color-roles-scrim: var(--primitive-colors-neutral-color-palette-neutral0);
+  --color-roles-primary: var(--primitive-colors-primary-color-palette-primary40);
+  --color-roles-on-primary: var(--primitive-colors-primary-color-palette-primary100);
+  --color-roles-primary-container: var(--primitive-colors-primary-color-palette-primary90);
+  --color-roles-on-primary-container: var(--primitive-colors-primary-color-palette-primary10);
+  --color-roles-secondary: var(--primitive-colors-secondary-color-palette-secondary40);
+  --color-roles-on-secondary: var(--primitive-colors-secondary-color-palette-secondary100);
+  --color-roles-secondary-container: var(--primitive-colors-secondary-color-palette-secondary90);
+  --color-roles-on-secondary-container: var(--primitive-colors-secondary-color-palette-secondary10);
+  --color-roles-tertiary: var(--primitive-colors-tertiary-color-palette-tertiary40);
+  --color-roles-on-tertiary: var(--primitive-colors-tertiary-color-palette-tertiary100);
+  --color-roles-tertiary-container: var(--primitive-colors-tertiary-color-palette-tertiary90);
+  --color-roles-on-tertiary-container: var(--primitive-colors-tertiary-color-palette-tertiary10);
+  --color-roles-error: var(--primitive-colors-error-color-palette-error40);
+  --color-roles-on-error: var(--primitive-colors-error-color-palette-error100);
+  --color-roles-error-container: var(--primitive-colors-error-color-palette-error90);
+  --color-roles-on-error-container: var(--primitive-colors-error-color-palette-error10);
+  --color-roles-success: var(--primitive-colors-success-color-palette-success40);
+  --color-roles-on-success: var(--primitive-colors-success-color-palette-success100);
+  --color-roles-success-container: var(--primitive-colors-success-color-palette-success90);
+  --color-roles-on-success-container: var(--primitive-colors-success-color-palette-success10);
+  --color-roles-warning: var(--primitive-colors-warning-color-palette-warning40);
+  --color-roles-on-warning: var(--primitive-colors-warning-color-palette-warning100);
+  --color-roles-warning-container: var(--primitive-colors-warning-color-palette-warning90);
+  --color-roles-on-warning-container: var(--primitive-colors-warning-color-palette-warning10);
+  --color-roles-info: var(--primitive-colors-info-color-palette-info40);
+  --color-roles-on-info: var(--primitive-colors-info-color-palette-info100);
+  --color-roles-info-container: var(--primitive-colors-info-color-palette-info90);
+  --color-roles-on-info-container: var(--primitive-colors-info-color-palette-info10);
+  --color-roles-focus-ring: var(--primitive-colors-neutral-color-palette-neutral10);
+  --color-roles-status-draft-container: var(--primitive-colors-neutral-color-palette-neutral92);
+  --color-roles-status-draft-on-container: var(--primitive-colors-neutral-variant-color-palette-neutral-variant30);
+  --color-roles-status-draft-border: var(--primitive-colors-neutral-variant-color-palette-neutral-variant50);
+  --color-roles-status-submitted-container: var(--primitive-colors-info-color-palette-info90);
+  --color-roles-status-submitted-on-container: var(--primitive-colors-info-color-palette-info10);
+  --color-roles-status-submitted-border: var(--primitive-colors-info-color-palette-info40);
+  --color-roles-status-changes-requested-container: var(--primitive-colors-warning-color-palette-warning90);
+  --color-roles-status-changes-requested-on-container: var(--primitive-colors-warning-color-palette-warning10);
+  --color-roles-status-changes-requested-border: var(--primitive-colors-warning-color-palette-warning40);
+  --color-roles-status-approved-container: var(--primitive-colors-success-color-palette-success90);
+  --color-roles-status-approved-on-container: var(--primitive-colors-success-color-palette-success10);
+  --color-roles-status-approved-border: var(--primitive-colors-success-color-palette-success40);
+  --color-roles-sync-all-uploaded-container: var(--primitive-colors-success-color-palette-success90);
+  --color-roles-sync-all-uploaded-on-container: var(--primitive-colors-success-color-palette-success10);
+  --color-roles-sync-all-uploaded-border: var(--primitive-colors-success-color-palette-success40);
+  --color-roles-sync-waiting-container: var(--primitive-colors-neutral-color-palette-neutral92);
+  --color-roles-sync-waiting-on-container: var(--primitive-colors-neutral-variant-color-palette-neutral-variant30);
+  --color-roles-sync-waiting-border: var(--primitive-colors-neutral-variant-color-palette-neutral-variant50);
+  --color-roles-sync-offline-container: var(--primitive-colors-neutral-color-palette-neutral92);
+  --color-roles-sync-offline-on-container: var(--primitive-colors-neutral-variant-color-palette-neutral-variant30);
+  --color-roles-sync-offline-border: var(--primitive-colors-neutral-variant-color-palette-neutral-variant50);
+  --color-roles-sync-syncing-container: var(--primitive-colors-primary-color-palette-primary90);
+  --color-roles-sync-syncing-on-container: var(--primitive-colors-primary-color-palette-primary10);
+  --color-roles-sync-syncing-border: var(--primitive-colors-primary-color-palette-primary40);
+  --color-roles-sync-failed-container: var(--primitive-colors-error-color-palette-error90);
+  --color-roles-sync-failed-on-container: var(--primitive-colors-error-color-palette-error10);
+  --color-roles-sync-failed-border: var(--primitive-colors-error-color-palette-error40);
+  --color-roles-sync-offline-warning-container: var(--primitive-colors-warning-color-palette-warning90);
+  --color-roles-sync-offline-warning-on-container: var(--primitive-colors-warning-color-palette-warning10);
+  --color-roles-sync-offline-warning-border: var(--primitive-colors-warning-color-palette-warning40);
+
+  /* ==========================================================================
+     Effects & Shadows
+     ========================================================================== */
+  --effect-umbra-key-shadow-hard: 4px 6px 8px 2px #00000024;
+  --effect-penumbra-key-shadow-medium: 2px 4px 6px 0px #0000001f;
+  --effect-ambient-shadow-soft: 2px 2px 20px 0px #0000001f;
+
+  /* ==========================================================================
+     Typography Tokens
+     ========================================================================== */
+  --typography-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-font-family-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --typography-headline-large-font-size: 2rem;
+  --typography-headline-large-line-height: 2.5rem;
+  --typography-headline-large-font-weight: 600;
+  --typography-headline-large-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-headline-medium-font-size: 1.75rem;
+  --typography-headline-medium-line-height: 2.25rem;
+  --typography-headline-medium-font-weight: 600;
+  --typography-headline-medium-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-headline-small-font-size: 1.5rem;
+  --typography-headline-small-line-height: 2rem;
+  --typography-headline-small-font-weight: 600;
+  --typography-headline-small-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-title-large-font-size: 1.375rem;
+  --typography-title-large-line-height: 1.75rem;
+  --typography-title-large-font-weight: 600;
+  --typography-title-large-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-title-medium-font-size: 1.125rem;
+  --typography-title-medium-line-height: 1.5rem;
+  --typography-title-medium-font-weight: 600;
+  --typography-title-medium-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-body-large-font-size: 1.125rem;
+  --typography-body-large-line-height: 1.625rem;
+  --typography-body-large-font-weight: 400;
+  --typography-body-large-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-body-medium-font-size: 1rem;
+  --typography-body-medium-line-height: 1.5rem;
+  --typography-body-medium-font-weight: 400;
+  --typography-body-medium-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-body-small-font-size: 0.875rem;
+  --typography-body-small-line-height: 1.25rem;
+  --typography-body-small-font-weight: 400;
+  --typography-body-small-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-label-large-font-size: 1rem;
+  --typography-label-large-line-height: 1.5rem;
+  --typography-label-large-font-weight: 600;
+  --typography-label-large-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --typography-label-medium-font-size: 0.875rem;
+  --typography-label-medium-line-height: 1.25rem;
+  --typography-label-medium-font-weight: 600;
+  --typography-label-medium-font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* ==========================================================================
+     Spacing Collection
+     ========================================================================== */
+  --spacing-collection-no-spacing: 0;
+  --spacing-collection-extra-small-spacing: 4px;
+  --spacing-collection-small-spacing: 8px;
+  --spacing-collection-medium-spacing: 12px;
+  --spacing-collection-base-spacing: 16px;
+  --spacing-collection-large-spacing: 20px;
+  --spacing-collection-extra-large-spacing: 24px;
+  --spacing-collection-very-large-spacing: 32px;
+
+  /* ==========================================================================
+     Other Tokens
+     ========================================================================== */
+  --size-touch-min: 48px;
+  --size-touch-primary: 56px;
+  --size-icon: 24px;
+  --size-focus-ring-width: 3px;
+  --size-focus-ring-offset: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* ==========================================================================
+       Color Roles (Dark Mode Overrides)
+       ========================================================================== */
+    --color-roles-surface: var(--primitive-colors-neutral-color-palette-neutral6);
+    --color-roles-surface-container-lowest: var(--primitive-colors-neutral-color-palette-neutral4);
+    --color-roles-surface-container-low: var(--primitive-colors-neutral-color-palette-neutral10);
+    --color-roles-surface-container: var(--primitive-colors-neutral-color-palette-neutral12);
+    --color-roles-surface-container-high: var(--primitive-colors-neutral-color-palette-neutral17);
+    --color-roles-surface-container-highest: var(--primitive-colors-neutral-color-palette-neutral22);
+    --color-roles-on-surface: var(--primitive-colors-neutral-color-palette-neutral90);
+    --color-roles-on-surface-variant: var(--primitive-colors-neutral-variant-color-palette-neutral-variant80);
+    --color-roles-outline: var(--primitive-colors-neutral-variant-color-palette-neutral-variant60);
+    --color-roles-outline-variant: var(--primitive-colors-neutral-variant-color-palette-neutral-variant30);
+    --color-roles-inverse-surface: var(--primitive-colors-neutral-color-palette-neutral90);
+    --color-roles-inverse-on-surface: var(--primitive-colors-neutral-color-palette-neutral20);
+    --color-roles-scrim: var(--primitive-colors-neutral-color-palette-neutral0);
+    --color-roles-primary: var(--primitive-colors-primary-color-palette-primary80);
+    --color-roles-on-primary: var(--primitive-colors-primary-color-palette-primary20);
+    --color-roles-primary-container: var(--primitive-colors-primary-color-palette-primary30);
+    --color-roles-on-primary-container: var(--primitive-colors-primary-color-palette-primary90);
+    --color-roles-secondary: var(--primitive-colors-secondary-color-palette-secondary80);
+    --color-roles-on-secondary: var(--primitive-colors-secondary-color-palette-secondary20);
+    --color-roles-secondary-container: var(--primitive-colors-secondary-color-palette-secondary30);
+    --color-roles-on-secondary-container: var(--primitive-colors-secondary-color-palette-secondary90);
+    --color-roles-tertiary: var(--primitive-colors-tertiary-color-palette-tertiary80);
+    --color-roles-on-tertiary: var(--primitive-colors-tertiary-color-palette-tertiary20);
+    --color-roles-tertiary-container: var(--primitive-colors-tertiary-color-palette-tertiary30);
+    --color-roles-on-tertiary-container: var(--primitive-colors-tertiary-color-palette-tertiary90);
+    --color-roles-error: var(--primitive-colors-error-color-palette-error80);
+    --color-roles-on-error: var(--primitive-colors-error-color-palette-error20);
+    --color-roles-error-container: var(--primitive-colors-error-color-palette-error30);
+    --color-roles-on-error-container: var(--primitive-colors-error-color-palette-error90);
+    --color-roles-success: var(--primitive-colors-success-color-palette-success80);
+    --color-roles-on-success: var(--primitive-colors-success-color-palette-success20);
+    --color-roles-success-container: var(--primitive-colors-success-color-palette-success30);
+    --color-roles-on-success-container: var(--primitive-colors-success-color-palette-success90);
+    --color-roles-warning: var(--primitive-colors-warning-color-palette-warning80);
+    --color-roles-on-warning: var(--primitive-colors-warning-color-palette-warning20);
+    --color-roles-warning-container: var(--primitive-colors-warning-color-palette-warning30);
+    --color-roles-on-warning-container: var(--primitive-colors-warning-color-palette-warning90);
+    --color-roles-info: var(--primitive-colors-info-color-palette-info80);
+    --color-roles-on-info: var(--primitive-colors-info-color-palette-info20);
+    --color-roles-info-container: var(--primitive-colors-info-color-palette-info30);
+    --color-roles-on-info-container: var(--primitive-colors-info-color-palette-info90);
+    --color-roles-focus-ring: var(--primitive-colors-neutral-color-palette-neutral90);
+    --color-roles-status-draft-container: var(--primitive-colors-neutral-color-palette-neutral17);
+    --color-roles-status-draft-on-container: var(--primitive-colors-neutral-variant-color-palette-neutral-variant80);
+    --color-roles-status-draft-border: var(--primitive-colors-neutral-variant-color-palette-neutral-variant60);
+    --color-roles-status-submitted-container: var(--primitive-colors-info-color-palette-info30);
+    --color-roles-status-submitted-on-container: var(--primitive-colors-info-color-palette-info90);
+    --color-roles-status-submitted-border: var(--primitive-colors-info-color-palette-info80);
+    --color-roles-status-changes-requested-container: var(--primitive-colors-warning-color-palette-warning30);
+    --color-roles-status-changes-requested-on-container: var(--primitive-colors-warning-color-palette-warning90);
+    --color-roles-status-changes-requested-border: var(--primitive-colors-warning-color-palette-warning80);
+    --color-roles-status-approved-container: var(--primitive-colors-success-color-palette-success30);
+    --color-roles-status-approved-on-container: var(--primitive-colors-success-color-palette-success90);
+    --color-roles-status-approved-border: var(--primitive-colors-success-color-palette-success80);
+    --color-roles-sync-all-uploaded-container: var(--primitive-colors-success-color-palette-success30);
+    --color-roles-sync-all-uploaded-on-container: var(--primitive-colors-success-color-palette-success90);
+    --color-roles-sync-all-uploaded-border: var(--primitive-colors-success-color-palette-success80);
+    --color-roles-sync-waiting-container: var(--primitive-colors-neutral-color-palette-neutral17);
+    --color-roles-sync-waiting-on-container: var(--primitive-colors-neutral-variant-color-palette-neutral-variant80);
+    --color-roles-sync-waiting-border: var(--primitive-colors-neutral-variant-color-palette-neutral-variant60);
+    --color-roles-sync-offline-container: var(--primitive-colors-neutral-color-palette-neutral17);
+    --color-roles-sync-offline-on-container: var(--primitive-colors-neutral-variant-color-palette-neutral-variant80);
+    --color-roles-sync-offline-border: var(--primitive-colors-neutral-variant-color-palette-neutral-variant60);
+    --color-roles-sync-syncing-container: var(--primitive-colors-primary-color-palette-primary30);
+    --color-roles-sync-syncing-on-container: var(--primitive-colors-primary-color-palette-primary90);
+    --color-roles-sync-syncing-border: var(--primitive-colors-primary-color-palette-primary80);
+    --color-roles-sync-failed-container: var(--primitive-colors-error-color-palette-error30);
+    --color-roles-sync-failed-on-container: var(--primitive-colors-error-color-palette-error90);
+    --color-roles-sync-failed-border: var(--primitive-colors-error-color-palette-error80);
+    --color-roles-sync-offline-warning-container: var(--primitive-colors-warning-color-palette-warning30);
+    --color-roles-sync-offline-warning-on-container: var(--primitive-colors-warning-color-palette-warning90);
+    --color-roles-sync-offline-warning-border: var(--primitive-colors-warning-color-palette-warning80);
+  }
+}
+
+:root[data-theme="dark"] {
+  /* ==========================================================================
+     Color Roles (Dark Mode Overrides)
+     ========================================================================== */
+  --color-roles-surface: var(--primitive-colors-neutral-color-palette-neutral6);
+  --color-roles-surface-container-lowest: var(--primitive-colors-neutral-color-palette-neutral4);
+  --color-roles-surface-container-low: var(--primitive-colors-neutral-color-palette-neutral10);
+  --color-roles-surface-container: var(--primitive-colors-neutral-color-palette-neutral12);
+  --color-roles-surface-container-high: var(--primitive-colors-neutral-color-palette-neutral17);
+  --color-roles-surface-container-highest: var(--primitive-colors-neutral-color-palette-neutral22);
+  --color-roles-on-surface: var(--primitive-colors-neutral-color-palette-neutral90);
+  --color-roles-on-surface-variant: var(--primitive-colors-neutral-variant-color-palette-neutral-variant80);
+  --color-roles-outline: var(--primitive-colors-neutral-variant-color-palette-neutral-variant60);
+  --color-roles-outline-variant: var(--primitive-colors-neutral-variant-color-palette-neutral-variant30);
+  --color-roles-inverse-surface: var(--primitive-colors-neutral-color-palette-neutral90);
+  --color-roles-inverse-on-surface: var(--primitive-colors-neutral-color-palette-neutral20);
+  --color-roles-scrim: var(--primitive-colors-neutral-color-palette-neutral0);
+  --color-roles-primary: var(--primitive-colors-primary-color-palette-primary80);
+  --color-roles-on-primary: var(--primitive-colors-primary-color-palette-primary20);
+  --color-roles-primary-container: var(--primitive-colors-primary-color-palette-primary30);
+  --color-roles-on-primary-container: var(--primitive-colors-primary-color-palette-primary90);
+  --color-roles-secondary: var(--primitive-colors-secondary-color-palette-secondary80);
+  --color-roles-on-secondary: var(--primitive-colors-secondary-color-palette-secondary20);
+  --color-roles-secondary-container: var(--primitive-colors-secondary-color-palette-secondary30);
+  --color-roles-on-secondary-container: var(--primitive-colors-secondary-color-palette-secondary90);
+  --color-roles-tertiary: var(--primitive-colors-tertiary-color-palette-tertiary80);
+  --color-roles-on-tertiary: var(--primitive-colors-tertiary-color-palette-tertiary20);
+  --color-roles-tertiary-container: var(--primitive-colors-tertiary-color-palette-tertiary30);
+  --color-roles-on-tertiary-container: var(--primitive-colors-tertiary-color-palette-tertiary90);
+  --color-roles-error: var(--primitive-colors-error-color-palette-error80);
+  --color-roles-on-error: var(--primitive-colors-error-color-palette-error20);
+  --color-roles-error-container: var(--primitive-colors-error-color-palette-error30);
+  --color-roles-on-error-container: var(--primitive-colors-error-color-palette-error90);
+  --color-roles-success: var(--primitive-colors-success-color-palette-success80);
+  --color-roles-on-success: var(--primitive-colors-success-color-palette-success20);
+  --color-roles-success-container: var(--primitive-colors-success-color-palette-success30);
+  --color-roles-on-success-container: var(--primitive-colors-success-color-palette-success90);
+  --color-roles-warning: var(--primitive-colors-warning-color-palette-warning80);
+  --color-roles-on-warning: var(--primitive-colors-warning-color-palette-warning20);
+  --color-roles-warning-container: var(--primitive-colors-warning-color-palette-warning30);
+  --color-roles-on-warning-container: var(--primitive-colors-warning-color-palette-warning90);
+  --color-roles-info: var(--primitive-colors-info-color-palette-info80);
+  --color-roles-on-info: var(--primitive-colors-info-color-palette-info20);
+  --color-roles-info-container: var(--primitive-colors-info-color-palette-info30);
+  --color-roles-on-info-container: var(--primitive-colors-info-color-palette-info90);
+  --color-roles-focus-ring: var(--primitive-colors-neutral-color-palette-neutral90);
+  --color-roles-status-draft-container: var(--primitive-colors-neutral-color-palette-neutral17);
+  --color-roles-status-draft-on-container: var(--primitive-colors-neutral-variant-color-palette-neutral-variant80);
+  --color-roles-status-draft-border: var(--primitive-colors-neutral-variant-color-palette-neutral-variant60);
+  --color-roles-status-submitted-container: var(--primitive-colors-info-color-palette-info30);
+  --color-roles-status-submitted-on-container: var(--primitive-colors-info-color-palette-info90);
+  --color-roles-status-submitted-border: var(--primitive-colors-info-color-palette-info80);
+  --color-roles-status-changes-requested-container: var(--primitive-colors-warning-color-palette-warning30);
+  --color-roles-status-changes-requested-on-container: var(--primitive-colors-warning-color-palette-warning90);
+  --color-roles-status-changes-requested-border: var(--primitive-colors-warning-color-palette-warning80);
+  --color-roles-status-approved-container: var(--primitive-colors-success-color-palette-success30);
+  --color-roles-status-approved-on-container: var(--primitive-colors-success-color-palette-success90);
+  --color-roles-status-approved-border: var(--primitive-colors-success-color-palette-success80);
+  --color-roles-sync-all-uploaded-container: var(--primitive-colors-success-color-palette-success30);
+  --color-roles-sync-all-uploaded-on-container: var(--primitive-colors-success-color-palette-success90);
+  --color-roles-sync-all-uploaded-border: var(--primitive-colors-success-color-palette-success80);
+  --color-roles-sync-waiting-container: var(--primitive-colors-neutral-color-palette-neutral17);
+  --color-roles-sync-waiting-on-container: var(--primitive-colors-neutral-variant-color-palette-neutral-variant80);
+  --color-roles-sync-waiting-border: var(--primitive-colors-neutral-variant-color-palette-neutral-variant60);
+  --color-roles-sync-offline-container: var(--primitive-colors-neutral-color-palette-neutral17);
+  --color-roles-sync-offline-on-container: var(--primitive-colors-neutral-variant-color-palette-neutral-variant80);
+  --color-roles-sync-offline-border: var(--primitive-colors-neutral-variant-color-palette-neutral-variant60);
+  --color-roles-sync-syncing-container: var(--primitive-colors-primary-color-palette-primary30);
+  --color-roles-sync-syncing-on-container: var(--primitive-colors-primary-color-palette-primary90);
+  --color-roles-sync-syncing-border: var(--primitive-colors-primary-color-palette-primary80);
+  --color-roles-sync-failed-container: var(--primitive-colors-error-color-palette-error30);
+  --color-roles-sync-failed-on-container: var(--primitive-colors-error-color-palette-error90);
+  --color-roles-sync-failed-border: var(--primitive-colors-error-color-palette-error80);
+  --color-roles-sync-offline-warning-container: var(--primitive-colors-warning-color-palette-warning30);
+  --color-roles-sync-offline-warning-on-container: var(--primitive-colors-warning-color-palette-warning90);
+  --color-roles-sync-offline-warning-border: var(--primitive-colors-warning-color-palette-warning80);
+}

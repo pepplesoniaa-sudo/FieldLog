@@ -1,0 +1,26 @@
+================================================================================
+FIELDLOG ROUTE AUDIT: PAGE COUNT BEFORE AUTH ROUTE CONSOLIDATION
+================================================================================
+Timestamp: 2026-10-29T10:15:00.000Z
+Scope: Application App Router Page Components Before Consolidation
+Methodology: Directory tree scan of distinct page.tsx entrypoints in /app
+
+PAGES IN APPLICATION (BEFORE COLLAPSE):
+--------------------------------------------------------------------------------
+ 1. app/page.tsx                                (Marketing Landing Page)
+ 2. app/sign-in/page.tsx                        (Dedicated Login Page)
+ 3. app/sign-up/page.tsx                        (Dedicated Registration Page)
+ 4. app/reset/page.tsx                          (Dedicated Password Reset Page)
+ 5. app/(app)/today/page.tsx                    (Supervisor Dashboard)
+ 6. app/(app)/capture/page.tsx                  (Field Capture Form)
+ 7. app/(app)/entry/page.tsx                    (Entry View & History)
+ 8. app/(app)/visit/page.tsx                    (Visit Preview)
+ 9. app/(app)/reports/page.tsx                  (Reports List)
+10. app/(app)/reports/[reportId]/page.tsx       (Report Detail & Revisions)
+11. app/(app)/review/page.tsx                   (Reviewer Queue)
+12. app/(app)/search/page.tsx                   (Search & Filter)
+13. app/(admin)/admin/page.tsx                  (Organisation Administration)
+14. app/(admin)/admin/billing/page.tsx          (Billing & Seats)
+
+TOTAL DISTINCT PAGE ROUTES (BEFORE): 14 Pages
+Auth Footprint: 3 separate route pages (sign-in, sign-up, reset) requiring full page reloads, duplicated layout wrapping, and repeated bundle evaluation.

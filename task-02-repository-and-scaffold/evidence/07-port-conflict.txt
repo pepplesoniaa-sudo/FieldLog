@@ -1,0 +1,16 @@
+DELIBERATE BREAKAGE 2: PORT CONFLICT ERROR
+==========================================
+
+$ npm run dev
+
+> fieldlog@0.1.0 dev
+> next dev -p 3000
+
+- Port 3000 is in use, trying 3001 instead.
+[Error: listen EADDRINUSE: address already in use :::3000] {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 3000
+}

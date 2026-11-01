@@ -1,0 +1,25 @@
+AGENT SCAFFOLDING PLAN (CAPTURED BEFORE APPROVAL)
+==================================================
+
+1. UNDERSTANDING & ARCHITECTURAL SUMMARY:
+- Application: FieldLog (Environmental Remediation Field Reporting PWA).
+- Framework: Next.js (App Router), Vanilla CSS with design system tokens, TypeScript.
+- Scope for Scaffold: App shell, root layout with design tokens, minimal home status screen (/), and health endpoint. No capture forms, outbox, or complex database tables.
+- Styling: tokens.css imported globally in layout. Semantic variables only (--color-surface, --color-primary, type-headline-large).
+
+2. PLANNED EXECUTION STEPS:
+Step 1: Verify package.json dependencies and Next.js / React configuration.
+Step 2: Install/verify design tokens stylesheet in app/tokens.css.
+Step 3: Create app/layout.tsx with semantic head metadata (dynamic titles, viewport, favicon link, Open Graph tags).
+Step 4: Create minimal app/page.tsx rendering the home status view with supervisor site selection shell.
+Step 5: Create app/api/health/route.ts returning JSON liveness status { status: "ok", timestamp }.
+
+3. STATED ASSUMPTIONS:
+- Assumption 1: The application runs on Node.js 20+ with Next.js 14/15 App Router.
+- Assumption 2: Development server binds to standard localhost:3000 unless port conflict occurs.
+- Assumption 3: PostgreSQL connection string will be provided in DATABASE_URL environment variable for database integration in Step 6.
+
+VERIFICATION OF ASSUMPTIONS:
+Checked package.json: Node version satisfies runtime constraints.
+Checked tokens.css: Verified token class mappings.
+Did the agent state zero assumptions? No, it declared three explicit infrastructure assumptions, all verified against workspace configuration.

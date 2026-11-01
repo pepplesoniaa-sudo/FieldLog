@@ -1,0 +1,15 @@
+TERMINAL OUTPUT: DEVELOPMENT SERVER STARTUP
+============================================
+
+$ npm run dev
+
+> fieldlog@0.1.0 dev
+> next dev -p 3000
+
+  ▲ Next.js 15.0.1
+  - Local:        http://localhost:3000
+  - Network:      http://192.168.1.145:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2140ms

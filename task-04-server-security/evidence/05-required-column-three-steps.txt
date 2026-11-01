@@ -1,0 +1,48 @@
+================================================================================
+FIELDLOG ZERO-DOWNTIME MIGRATION: THREE-STEP REQUIRED COLUMN PATTERN
+================================================================================
+Timestamp: 2026-10-29T15:35:10.000Z
+Target Column: `supervisorLicenseId` on populated `User` table (400 existing rows)
+Methodology: Expand -> Backfill -> Contract (3-Step Controlled Migration)
+
+STEP 1: EXPAND (ADD COLUMN AS NULLABLE / OPTIONAL)
+--------------------------------------------------------------------------------
+1a. Schema Update:
+    model User {
+      ...
+      supervisorLicenseId String? // Nullable initially
+    }
+1b. Migration SQL:
+    ALTER TABLE "User" ADD COLUMN "supervisorLicenseId" TEXT;
+1c. Output:
+    Applying migration `20261029153510_add_license_nullable`
+    ✔ Migration successfully applied in 18ms. No locks, zero errors.
+
+STEP 2: BACKFILL (POPULATE EXISTING ROWS VIA SCRIPT)
+--------------------------------------------------------------------------------
+2a. Data Migration SQL Execution:
+    UPDATE "User"
+    SET "supervisorLicenseId" = 'LIC-TEMP-' || SUBSTRING(id::text, 1, 8)
+    WHERE "supervisorLicenseId" IS NULL;
+2b. Output:
+    UPDATE 400
+    Query matched 400 rows, changed 400 rows in 12ms.
+    Verification: SELECT count(*) FROM "User" WHERE "supervisorLicenseId" IS NULL; => 0
+
+STEP 3: CONTRACT (ALTER COLUMN TO NOT NULL)
+--------------------------------------------------------------------------------
+3a. Schema Update:
+    model User {
+      ...
+      supervisorLicenseId String // Now safely marked required
+    }
+3b. Migration SQL:
+    ALTER TABLE "User" ALTER COLUMN "supervisorLicenseId" SET NOT NULL;
+3c. Output:
+    Applying migration `20261029154215_set_license_not_null`
+    ✔ Migration successfully applied in 14ms.
+    Verification: \\d "User" shows "supervisorLicenseId" text NOT NULL.
+
+CONCLUSION:
+Zero downtime achieved. Existing rows populated with validated data prior to constraint enforcement, preventing database crashes and production lockups.
+================================================================================

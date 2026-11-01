@@ -1,0 +1,20 @@
+RECOVERY 1: NESTED FOLDER RESOLVED BOTH WAYS
+===============================================
+
+METHOD A: RE-SCAFFOLD IN PLACE VIA AGENT
+Command given to agent:
+"Move all files, configurations, and package definitions from the nested 'fieldlog/' directory into the repository root '.', preserve root dotfiles (.gitignore, .env), and remove the redundant nested directory."
+Result: Package definitions and node_modules aligned with the primary working directory.
+
+METHOD B: COMMAND LINE DIRECTORY NAVIGATION
+PowerShell Command:
+cd .\fieldlog\
+npm run dev
+
+TERMINAL OUTPUT:
+> fieldlog@0.1.0 dev
+> next dev -p 3000
+
+  ▲ Next.js 15.0.1
+  - Local:        http://localhost:3000
+ ✓ Ready in 1980ms

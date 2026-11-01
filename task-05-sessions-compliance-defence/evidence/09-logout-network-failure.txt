@@ -1,0 +1,43 @@
+================================================================================
+FIELDLOG LOGOUT DIAGNOSTIC: THE NETWORK FAILURE DEFECT (REPRODUCED)
+================================================================================
+Timestamp: 2026-10-30T22:25:00.000Z
+Objective: Step 4 Edge Case (A network failure makes the logout request fail on the server while the interface shows the user as logged out).
+
+1. INITIAL SETUP:
+--------------------------------------------------------------------------------
+Active Session Token: "sess_live_998877665544332211"
+Database State:
+SELECT id, "userId", "sessionToken", expires FROM "Session" WHERE "sessionToken" = 'hash_9988...';
+Result: 1 row found (Status: ACTIVE, User: Aliyu Bakare).
+
+2. SIMULATING NETWORK SEVERANCE DURING LOGOUT:
+--------------------------------------------------------------------------------
+Supervisor clicks [Sign Out] in mobile app header.
+Cellular link drops simultaneously (Simulated via Network offline toggle / firewall block on /api/auth/logout).
+
+Client Console Log:
+[Fetch] POST http://localhost:3000/api/auth/logout -> net::ERR_INTERNET_DISCONNECTED
+[UI Handler] catch(err) triggered: "Failed to fetch"
+[UI Handler] naive fallback executed: router.push('/sign-in')
+[UI Component] Displaying Login View: "Please sign in to continue."
+
+3. THE CRITICAL VULNERABILITY REPRODUCED:
+--------------------------------------------------------------------------------
+The user sees the login screen and walks away, believing their session is dead.
+
+Database Inspection on Server (PostgreSQL):
+SELECT id, "userId", "sessionToken", expires FROM "Session" WHERE "sessionToken" = 'hash_9988...';
+
+OUTPUT:
+--------------------------------------------------------------------------------
+                  id                  |                userId                | expires
+--------------------------------------+--------------------------------------+-------------------------
+ a8b7c6d5-e4f3-2a1b-0c9d-8e7f6a5b4c3d | a1111111-1111-1111-1111-111111111111 | 2026-11-29 22:25:00.000
+(1 row)
+
+DEFECT FINDING:
+The session row is STILL ALIVE in PostgreSQL!
+Because the HTTP request failed to reach the server, the server never revoked the token. Anyone who recovers the cookie from memory or reopens the browser with cache restored bypasses authentication immediately.
+================================================================================
+

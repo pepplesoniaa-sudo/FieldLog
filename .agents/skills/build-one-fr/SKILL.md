@@ -7,7 +7,7 @@ description: Builds one FieldLog functional requirement, such as FR-12, from its
 Run the steps in order. Finish each step before you start the next. Each step ends with a check you can show in your reply.
 
 ## 1. Find the requirement
-- Open docs/FieldLog-V1-PRD-v2.2.md. Find the FR row in section 5. Copy its id, text and priority.
+- Open docs/FieldLog-V1-PRD-v2.4.md. Find the FR row in section 5. Copy its id, text and priority.
 - Find every user story in section 5.8 that names this FR id. Copy each Given, When and Then, with its exact values and on-screen texts.
 - Check: you can quote the FR row and every matching story. If no story names the FR, write "no story" and use the FR text as the only acceptance source.
 

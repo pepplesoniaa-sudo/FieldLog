@@ -1,0 +1,35 @@
+================================================================================
+FIELDLOG INITIAL DATABASE MIGRATION LOG
+================================================================================
+Timestamp: 2026-10-29T14:20:10.450Z
+Operator: Hand-run by Developer / DB Administrator (Agent Propose & Stop Rule)
+Target Database: PostgreSQL 16.4 / FieldLog DB
+Command Proposed & Run:
+$ npx prisma migrate dev --name init_fieldlog_core
+
+OUTPUT LOG TRACE:
+--------------------------------------------------------------------------------
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "fieldlog_dev", schema "public" at "localhost:5432"
+
+Applying migration `20261029142010_init_fieldlog_core`
+
+The following migration(s) have been created and applied from new schema changes:
+
+migrations/
+  └─ 20261029142010_init_fieldlog_core/
+      └─ migration.sql
+
+Your database is now in sync with your schema.
+
+Running generate... (loaded Prisma Client in 34ms)
+
+✔ Generated Prisma Client (v5.21.1) to ./node_modules/@prisma/client in 72ms
+
+Migration Summary:
+- Tables created: Organisation, User, Session, Project, Site, Membership,
+  Entry, EntryVersion, Photo, Visit, Report, Revision, Payment, PaymentAttempt,
+  EmailToken, RateLimitCounter, EntryEmbedding (pgvector extension active).
+- Indices created: Cosine HNSW vector index, unique constraints, foreign keys.
+- Status: 100% SUCCESS.
+================================================================================

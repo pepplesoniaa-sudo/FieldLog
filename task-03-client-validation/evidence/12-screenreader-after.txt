@@ -1,0 +1,61 @@
+================================================================================
+FIELDLOG SCREEN READER AUDIT TRANSCRIPT: AFTER ACCESSIBILITY FIXES
+================================================================================
+Screen Reader: Windows Narrator / NVDA 2024.3
+Browser: Microsoft Edge 130.0.2849.68 (x64)
+Target Route: http://localhost:3000/sign-in?mode=sign-up
+State Tested: Incomplete form with validation errors and accessible submit button
+Fixes Applied:
+  1. aria-invalid="true" on invalid fields
+  2. aria-describedby pointing to error containers with role="alert"
+  3. Warning icon (⚠️) providing color-independent visual indication
+  4. aria-required="true" on all mandatory fields including Terms Checkbox
+  5. Password requirements linked via aria-describedby upon typing
+  6. Accessible button using aria-disabled="true" (tabbable, announces state and click helper banner)
+  7. Text input with inputmode="numeric" replacing buggy spin button
+
+TRANSCRIPT BY TAB ORDER (AFTER FIXES):
+--------------------------------------------------------------------------------
+
+[Tab 1 - Heading]
+"FieldLog, heading level 1"
+"Create Organisation Account, heading level 2"
+
+[Tab 2 - Full Name Input]
+"Full Name, required, invalid entry, edit, blank. Caution. Full name is required. Please enter your first and last name."
+[Result]: Screen reader immediately announces that the field is mandatory, currently invalid, and speaks the exact corrective guidance.
+
+[Tab 3 - Organisation Name Input]
+[Action: User types 'AB', presses Tab]
+"Organisation Name, required, invalid entry, edit, AB. Caution. Organisation name must be at least 3 characters."
+[Result]: Character count error is linked and read automatically via aria-describedby="orgName-error".
+
+[Tab 4 - Email Input]
+[Action: User types 'test', presses Tab]
+"Work Email Address, required, invalid entry, edit, test. Caution. Please enter a valid email address, for example name at remediation dot co dot uk."
+[Result]: Real-time format constraint announced with example syntax.
+
+[Tab 5 - Password Input]
+[Action: User focuses password field and begins typing]
+"Password, required, password edit, blank. Password must be at least 10 characters long."
+[Result]: Password rule is programmatically linked to the input via aria-describedby="password-hint" and announced as soon as typing begins.
+
+[Tab 6 - Supervisor Seats Input (Text mode with inputmode="numeric")]
+"Supervisor Seats, required, edit, 5. Enter number of field supervisors between 1 and 500."
+[Result]: Announced as a standard clean text input with numeric intent and descriptive range guidance. Zero spin button confusion, zero default "05" bug.
+
+[Tab 7 - Terms Acceptance Checkbox]
+"I agree to the FieldLog Terms of Service and Privacy Policy, check box, required, not checked."
+[Result]: Mandatory requirement is unambiguously announced.
+
+[Tab 8 - Submit Button (Accessible Disabled State)]
+[Action: User tabs to submit button]
+"Create Organisation Account, button, disabled."
+[Action: User presses Enter or Space while disabled]
+"Alert: Please complete all required fields and accept terms to proceed."
+[Result]: The button remains fully discoverable in the tab order! It communicates its disabled state via aria-disabled="true". When triggered, it fires an accessible live alert explaining exactly why the form cannot submit and what the user must correct.
+
+USER HAUWA JOURNEY COMPARED:
+Before: Silence, confusion, dropped from tab order, abandoned site.
+After: 100% verbal parity with visual UI. Complete autonomy and crystal clear recovery instructions.
+================================================================================

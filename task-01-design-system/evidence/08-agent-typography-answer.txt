@@ -1,0 +1,18 @@
+QUESTION ASKED TO AGENT:
+"Which specific typography token and style class did you apply to the card title ('North Wetland Excavation') and the primary action button ('Add Supervisor Observation') in capture-card.html?"
+
+AGENT ANSWER:
+"For the card title 'North Wetland Excavation', I applied the class 'type-title-large' which corresponds to:
+- Font Size: 1.375rem (22px)
+- Line Height: 1.9375rem (31px, derived via the 1.4x formula)
+- Font Weight: 600 (SemiBold)
+- Letter Spacing: 0px
+
+For the primary action button 'Add Supervisor Observation', I applied the class 'type-label-large' which corresponds to:
+- Font Size: 0.875rem (14px)
+- Line Height: 1.3125rem (21px, derived via the 1.5x formula)
+- Font Weight: 600 (SemiBold)
+- Letter Spacing: +0.1px
+
+CORRECTION NOTE:
+During initial markup drafting, the agent mistakenly used 'type-headline-small' (24px) for the card title, which caused awkward wrapping in narrow mobile viewports. When questioned, it recognized the error and corrected it to 'type-title-large' (22px) to match the strict card layout specifications in the design system."

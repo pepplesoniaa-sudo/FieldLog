@@ -1,0 +1,10 @@
+FIRST PAGE LOAD REQUEST & TIMING LOG
+=====================================
+
+GET / 200 OK - 8450ms
+  - Compile /: 5820ms
+  - Module evaluation: 1420ms
+  - Server rendering & HTML stream: 1210ms
+
+SUBSEQUENT PAGE RELOAD:
+GET / 200 OK - 68ms (cached compilation & in-memory component graph)

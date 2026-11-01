@@ -7,7 +7,7 @@ description: Checks AGENTS.md and every file in .agents/rules/ against a new or 
 Run the steps in order. This skill reads and reports. It edits nothing.
 
 ## 1. Name the change
-- Name the source: the new PRD file in docs/ and its change table, or Rox's message with the decision.
+- Name the source: the canonical PRD file in docs/ (docs/FieldLog-V1-PRD-v2.4.md) and its change table, or Rox's message with the decision.
 - Copy each change row, or each decision line.
 - Check: your notes list every change row.
 

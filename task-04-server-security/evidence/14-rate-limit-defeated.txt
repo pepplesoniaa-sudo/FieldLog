@@ -1,0 +1,52 @@
+================================================================================
+FIELDLOG RATE LIMITING AUDIT: TRIGGERING & DEFEATING IP-BASED RATE LIMITS
+================================================================================
+Execution Timestamp: 2026-10-29T22:53:51.000Z
+Test Script: scratch/test_rate_limiting.mjs
+Endpoint: /api/auth/register
+Policy: PRD 7.7 (Maximum 5 signups per hour per IP)
+
+1. TRIGGERING THE RATE LIMIT ON IP 198.51.100.14:
+--------------------------------------------------------------------------------
+Attempt 1 (198.51.100.14): HTTP 201 Created -> REGISTRATION_SUCCESS
+Attempt 2 (198.51.100.14): HTTP 201 Created -> REGISTRATION_SUCCESS
+Attempt 3 (198.51.100.14): HTTP 201 Created -> REGISTRATION_SUCCESS
+Attempt 4 (198.51.100.14): HTTP 201 Created -> REGISTRATION_SUCCESS
+Attempt 5 (198.51.100.14): HTTP 201 Created -> REGISTRATION_SUCCESS
+
+Attempt 6 (198.51.100.14) - RATE LIMIT EXCEEDED:
+HTTP/1.1 429 Too Many Requests
+Retry-After: 3599
+Content-Type: application/json
+
+{
+  "error": "Too Many Requests",
+  "message": "Registration rate limit exceeded. Maximum 5 signups per hour per IP.",
+  "retryAfter": 3599
+}
+
+2. DEFEATING THE RATE LIMIT VIA IP ROTATION:
+--------------------------------------------------------------------------------
+Adversaries bypass IP-only rate limiters effortlessly using residential proxy networks, VPN rotation, or IPv6 prefix cycling.
+
+Test: Rotating source IP header to 203.0.113.88:
+$ curl -X POST http://localhost:3000/api/auth/register \
+  -H "X-Forwarded-For: 203.0.113.88" \
+  -H "Content-Type: application/json" \
+  -d '{ ... valid payload ... }'
+
+RESPONSE RECEIVED FOR ATTEMPT 7 (NEW IP):
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "status": "REGISTRATION_SUCCESS",
+  "message": "Account registered successfully. Verification code dispatched via background worker.",
+  "organisation": { "name": "Acme Remediation Ltd", "seats": 10 },
+  "user": { "name": "Tunde Bakare", "email": "tunde7_1793314431750@fieldlog.internal" },
+  "verification": { "expiresAt": "2026-10-29T23:03:51.912Z", "deliveryMethod": "BACKGROUND_QUEUE_SMTP" }
+}
+
+CONCLUSION & ARCHITECTURAL DEFENSE:
+Keying rate limits on client IP address alone is fundamentally weak. Attackers rotating across cheap proxy networks completely evade the limit. In production, rate limits must be compound-keyed: combining client IP, account email address, and device fingerprint hashes stored in a distributed Redis cache.
+================================================================================

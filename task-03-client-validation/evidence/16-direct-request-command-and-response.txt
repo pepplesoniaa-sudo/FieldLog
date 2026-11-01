@@ -1,0 +1,64 @@
+================================================================================
+FIELDLOG DIRECT REQUEST ATTACK: SKIPPING THE CLIENT BROWSER ENTIRELY
+================================================================================
+Target Endpoint: http://localhost:3000/api/auth/register-test
+Method: HTTP POST
+Tool: Node.js direct HTTP client / curl command bypass
+Execution Timestamp: 2026-10-29T22:18:48.489Z
+
+[EXACT COMMAND EXECUTED]
+--------------------------------------------------------------------------------
+curl -X POST http://localhost:3000/api/auth/register-test \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullName": "a",
+    "email": "bot-attack-no-at-sign",
+    "password": "short",
+    "orgName": "x",
+    "seats": -999,
+    "acceptTerms": false
+  }'
+
+[RAW SERVER RESPONSE RECEIVED]
+--------------------------------------------------------------------------------
+HTTP/1.1 200 OK
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+Content-Type: application/json
+Date: Thu, 29 Oct 2026 22:18:48 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{
+  "status": "RECEIVED_AT_ENDPOINT",
+  "accepted": true,
+  "message": "Endpoint accepted payload directly without client validation intervention.",
+  "clientValidationBypassed": true,
+  "dataReceived": {
+    "fullName": "a",
+    "email": "bot-attack-no-at-sign",
+    "password": "short",
+    "orgName": "x",
+    "seats": -999,
+    "acceptTerms": false
+  },
+  "serverChecksEnforced": [],
+  "timestamp": "2026-10-29T22:18:48.489Z",
+  "warning": "CRITICAL SECURITY DEFECT: Client-side validation was completely bypassed by direct HTTP request. Server validation (Task 4) is mandatory."
+}
+
+[ANALYSIS OF CLIENT-SIDE RULES ENFORCED]
+--------------------------------------------------------------------------------
+1. Two-word name rule ("fullName": "a"): BYPASSED (Server accepted "a")
+2. Name minimum 2 chars ("fullName": "a"): BYPASSED (Server accepted "a")
+3. Org name minimum 3 chars ("orgName": "x"): BYPASSED (Server accepted "x")
+4. Real-time email regex ("email": "bot-attack-no-at-sign"): BYPASSED (Server accepted non-email)
+5. Password length >= 10 ("password": "short"): BYPASSED (Server accepted 5-char password)
+6. Supervisor seats 1-500 range ("seats": -999): BYPASSED (Server accepted negative seats)
+7. Terms acceptance mandatory ("acceptTerms": false): BYPASSED (Server accepted false)
+8. Empty field prevention: BYPASSED (Server accepted all malformed attributes)
+
+SCORE: 0 out of 8 client-side validation rules were enforced by the server.
+CONCLUSION:
+Client-side validation was 100% bypassed. The server happily accepted negative supervisor seats, a single-letter name, an invalid email address, and false terms acceptance. This empirical proof demonstrates why client validation is purely an ergonomic convenience, not a security control.
+================================================================================

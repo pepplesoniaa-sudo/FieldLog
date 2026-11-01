@@ -1,0 +1,11 @@
+RECOVERY 3: 404 AND BLANK PAGE RESOLVED
+=======================================
+
+ACTION TAKEN:
+1. Created the proper App Router route folder: 'app/capture/'.
+2. Created 'app/capture/page.tsx' exporting a default React page component.
+3. Created a custom 'app/not-found.tsx' to ensure when a route does not exist, users see a branded FieldLog navigation recovery screen with a "Return to Active Site" button instead of a dead blank page.
+
+RE-TEST TERMINAL LOG:
+GET /capture 200 OK - 85ms
+GET /invalid-route 404 Not Found - 42ms (Branded not-found.tsx UI rendered)

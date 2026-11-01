@@ -1,0 +1,35 @@
+================================================================================
+FIELDLOG SCHEMA DRIFT DEFECT: CLIENT GENERATION OUT OF SYNC WITH DATABASE
+================================================================================
+Timestamp: 2026-10-29T16:02:45.120Z
+Test Scenario: Modifying `schema.prisma` by adding a new field `complianceRating Int` to `Organisation`, running `prisma generate` to rebuild TypeScript client types, but deliberately omitting `prisma migrate`.
+
+RUNTIME ERROR TRACE (APPLICATION ROUTE ATTEMPTING DB QUERY):
+--------------------------------------------------------------------------------
+Error: 
+Invalid `prisma.organisation.findUnique()` invocation:
+
+{
+  where: {
+    id: "9f8b2c41-3a10-4109-8b01-1b9182379123"
+  },
+  select: {
+    id: true,
+    name: true,
+    complianceRating: true // <-- Field exists in generated TypeScript client
+  }
+}
+
+The column `complianceRating` does not exist in the current database schema.
+Error code: P2022
+Database error: column "complianceRating" does not exist at character 84
+
+EXPLANATION OF THE DRIFT:
+--------------------------------------------------------------------------------
+Two independent components went out of step:
+1. The TypeScript ORM Client (`@prisma/client`): Rebuilt from the local `schema.prisma` file, containing the new `complianceRating` type definition. TypeScript compiler gave zero warnings.
+2. The Live PostgreSQL Database: Left unchanged because no SQL `ALTER TABLE` DDL statement was ever executed against it.
+
+Remediation:
+Never treat `prisma generate` as a database operation. Either apply the migration via `prisma migrate dev` or roll back `schema.prisma` to restore alignment.
+================================================================================

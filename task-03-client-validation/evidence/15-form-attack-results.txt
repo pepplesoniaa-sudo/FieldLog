@@ -1,0 +1,57 @@
+================================================================================
+FIELDLOG FORM ATTACK AUDIT: ATTACKING THROUGH THE BROWSER CLIENT
+================================================================================
+Target: /sign-in?mode=sign-up
+Methodology: Systematic exploratory testing against all 8 client-side validation rules using adversarial input patterns, boundary testing, and evasion techniques.
+
+TEST MATRIX & ATTACK OUTCOMES:
+--------------------------------------------------------------------------------
+Attack 1: Single-token name ("Tunde")
+Input: fullName = "Tunde"
+Rule Target: Category 2 - Two-word minimum name requirement
+Result: BLOCKED. Error displayed: "Please provide both your first and last name separated by a space."
+
+Attack 2: Sub-minimal name ("A")
+Input: fullName = "A"
+Rule Target: Category 2 - Minimum 2 characters
+Result: BLOCKED. Error displayed: "Name must be at least 2 characters long."
+
+Attack 3: Minimal initials evasion ("A B")
+Input: fullName = "A B"
+Rule Target: Category 2 - Name realism and compliance
+Result: PASSED! (VULNERABILITY DETECTED). The client rule verified length >= 2 (3 chars) and split(/\s+/).length >= 2 (2 items). The client accepted single-letter initial tokens as a legitimate human name.
+
+Attack 4: Trailing and leading whitespace evasion ("   John Doe   ")
+Input: fullName = "   John Doe   "
+Rule Target: Category 2 - Structure
+Result: Handled by .trim(), but the raw state in memory preserves internal multiple whitespace unless sanitized.
+
+Attack 5: Password composed exclusively of 10 whitespace characters ("          ")
+Input: password = "          " (10 space characters)
+Rule Target: Category 2 - Password length (10 chars minimum)
+Result: PASSED! (CRITICAL DEFECT DETECTED). The client validation checked `value.length < 10`. Because spaces contribute to string length, 10 consecutive space characters satisfied the rule, and the client marked the password field as valid!
+
+Attack 6: Minimal email address ("a@b")
+Input: email = "a@b"
+Rule Target: Category 3 - Email regex format
+Result: BLOCKED. Regex rejected due to missing top-level domain dot.
+
+Attack 7: Artificial minimal domain email ("a@b.c")
+Input: email = "a@b.c"
+Rule Target: Category 3 - Email deliverability and domain structure
+Result: PASSED! (VULNERABILITY DETECTED). The regex matched string-@-string-.-char. The client accepted an unrouteable single-letter domain and single-letter TLD without DNS or MX verification.
+
+Attack 8: Unbounded buffer flood (10,000 characters pasted into Organisation Name)
+Input: orgName = "A".repeat(10000)
+Rule Target: Category 2 - Field length bounds
+Result: PASSED! (BUFFER DEFECT DETECTED). The client validation only checked `value.trim().length < 3`. Because no upper bound (e.g. max 100 characters) was enforced, a 10KB string was accepted into state and UI.
+
+SUMMARY OF WHAT GOT THROUGH:
+- Minimal initials ("A B")
+- All-whitespace passwords satisfying length ("          ")
+- Degenerate synthetic emails ("a@b.c")
+- Unbounded 10KB string floods
+
+CONCLUSION:
+Client-side heuristics are porous. Even thorough client rules have blind spots and evasion vectors that cooperative validation fails to mitigate.
+================================================================================
