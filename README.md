@@ -1,65 +1,53 @@
 # FieldLog: Offline-First Statutory Site Reporting Infrastructure
 
-> **Target Audience**: Technical Interviewers, System Architects & Engineering Directors (4-Minute Read)  
 > **Product Fact Source**: `docs/FieldLog-V1-PRD-v2.4.md` (Canonical Consolidated Specification)  
-> **Core Engineering Invariant**: Zero data loss across the entire pipeline—from an offline phone in a remote swamp to an approved, cryptographically frozen regulatory report (PRD G3, NFR-01, NFR-02).
+> **Course Brief**: `ship-and-found-tasks.md` (Ship & Found: Five Assessment Tasks)  
+> **Core Operational Invariant**: Zero data loss across the entire pipeline—from an offline phone on a remote remediation site to an approved, cryptographically frozen regulatory report (PRD G3, NFR-01, NFR-02).
 
 ---
 
-## 1. Executive Summary & What FieldLog Is
+## 1. What This Is
 
-FieldLog is an enterprise Progressive Web App (PWA) engineered for field supervisors, safety officers, and licensed engineers on remote environmental remediation and ecological restoration sites (e.g. oil spill cleanups, hazardous industrial containment, and wetland restoration).
-
-On remediation sites, supervisors capture dozens of high-resolution photographic proofs, GPS coordinates, and structured work notes in harsh outdoor conditions with degraded or nonexistent cellular connectivity (2G/Edge/Airplane mode). Currently, contractors lose millions in withheld payments due to fragmented field records (WhatsApp photos, soggy paper notebooks, and manual Word formatting).
-
-FieldLog enables **"Capture once on site, report automatically with zero loss"**:
-1. **Offline Capture**: Captures photos, EXIF metadata, and structured notes offline; persists them to IndexedDB in an atomic transaction before declaring "Saved on this phone" (FR-20, FR-21).
-2. **Deterministic Synchronization**: An append-only log of typed, idempotent sync operations reconciles with PostgreSQL whenever connectivity returns (FR-24).
-3. **Automated Daily Site Reports**: Compiles field entries into frozen, revision-controlled daily reports with immutable SHA-256 snapshot checksums for one-click reviewer approval and statutory PDF export (FR-36, FR-42).
+FieldLog is an offline-first progressive web application engineered for field supervisors and certified reviewers on environmental remediation sites (e.g. soil decontamination, brownfield monitoring, and toxic containment), where capturing high-resolution photos, GPS coordinates, and structured notes once—under zero cellular reception—and compiling them into verified, audit-ready daily site reports with zero data loss is the one thing that must work.
 
 ---
 
-## 2. Who Uses It (User Personas & Role Boundaries)
+## 2. Status
 
-* **Field Supervisor (Primary)**: Captures site entries on mobile phones or ruggedized tablets under harsh weather; submits the draft daily report at the end of shift (FR-09 to FR-17).
-* **Project Reviewer**: Exactly one certified engineer per project, assigned by the admin (FR-52). Approves or requests changes with mandatory comments on desktop (FR-37). *Enforced rule: A user never reviews a report they created (FR-40).*
-* **Backup Reviewer**: Optional reviewer per project who steps in if the primary reviewer is the report author.
-* **Organisation Admin**: Manages projects, remediation sites, user memberships, seat subscriptions, and statutory retention periods on desktop (FR-51 to FR-55).
+Honest disclosure of implementation status across the platform:
 
----
-
-## 3. The Five Assessment Deliverables Directories
-
-The repository is organized into five standalone assessment task directories containing complete technical documentation, empirical machine logs, and visual evidence:
-
-| Task Directory | Focus Area | Key Architectural Deliverables & Proofs |
-| :--- | :--- | :--- |
-| **[`task-01-design-system/`](./task-01-design-system/)** | Design Tokens & System Integrity | Material 3 HCT color system pinned at Primary 40 (`#1B5EAD`), 15-style typography scale, primary-tinted elevation, JSON tokens compiled to CSS, and empirical proof of agent token conformance (0 raw hex values). |
-| **[`task-02-repository-and-scaffold/`](./task-02-repository-and-scaffold/)** | App Architecture & Diagnostics | Next.js 15 App Router foundation, `/api/health` liveness checks, port-conflict recovery protocols, responsive mobile measure control, and hand-drawn working tree. |
-| **[`task-03-client-validation/`](./task-03-client-validation/)** | Form Architecture & Client Bounds | Single-page authentication collapse (`sign-in`, `sign-up`, `reset`), 4 validation categories, WCAG 2.2 AA audit, anti-enumeration defenses, and direct adversarial attack proof (`curl` bypassing client checks). |
-| **[`task-04-server-security/`](./task-04-server-security/)** | Server Truth & Boundary Defense | Immutable Zod schemas at API boundary, 3-step zero-downtime database migrations, Argon2id vs SHA-256 machine benchmarks (82.88ms vs 0.015ms), compound rate limiting, $k$-Anonymity breach verification, and queue-backed background email dispatch. |
-| **[`task-05-sessions-compliance-defence/`](./task-05-sessions-compliance-defence/)** | Sessions & Statutory Compliance | Server-side hashed sessions in PostgreSQL, 14-day deletion grace period, functional segregation (anonymising user identity while retaining 7-year environmental records), primary field research with an environmental contractor, 7-section technical handbook, and 22 viva defence answers. |
+* **Finished (100% Complete & Evidenced)**:
+  * **Task 1 (Design System)**: Complete Material 3 token architecture pinned at Primary 40 (`#1B5EAD`), 15-style responsive typography scale ($1.4\times$ multiplier), primary-tinted elevation shadows, complete vs incomplete JSON export evidence, and verified agent token consumption (0 raw hex values).
+  * **Task 2 (Scaffold & Diagnostics)**: Next.js 15 App Router architecture, `/api/health` diagnostic endpoint, port-conflict recovery with machine PIDs, first page load benchmarks, responsive measure control, and hand-drawn working tree.
+  * **Task 3 (Client Validation & Accessibility)**: Single-page authentication collapse (`sign-in`, `sign-up`, `reset`), 4 client-side validation tiers, full WCAG 2.2 AA audit with caution icons and screen reader transcripts, anti-enumeration defenses, and adversarial curl bypass proof.
+  * **Task 4 (Server Security & Data Truth)**: Multi-tenant PostgreSQL Prisma schema with 20+ tables (including separate `Payment` and `PaymentAttempt` tables), boundary Zod validation, 3-step zero-downtime migration protocols, empirical Argon2id vs SHA-256 benchmarks (82.88ms vs 0.015ms), compound rate limiting, and queue-backed background email dispatch.
+  * **Task 5 (Sessions, Compliance & Defence)**: Server-side hashed sessions with secure cookie flags, 14-day account deletion grace period, right-to-erasure vs statutory retention conflict resolution (7-year environmental records), primary field research with an environmental contractor, 7-section technical handbook, and 22 viva defence answers.
+* **Half Done (In Active Construction)**:
+  * **Offline Sync Outbox Queue (FR-20 to FR-25)**: IndexedDB schema and typed client sync operation log designed; background Serwist service worker sync triggers undergoing field simulation.
+  * **Statutory PDF Report Generation (FR-42)**: Report revision data model and frozen SHA-256 snapshot hashing completed; `@react-pdf/renderer` print stylesheet undergoing cross-browser layout tuning.
+* **Not Started / Deliberately Deferred (Phase 2 Scope)**:
+  * **Word (.docx) Export (FR-42a)**: Explicitly classified as a Should in PRD; deferred until requested.
+  * **Gemini AI Summary Suggestions (FR-58) & Semantic Meaning Search (FR-59)**: Fully modeled in schema (`AiSuggestion`, `EntryEmbedding`), but deliberately kept switched OFF until Data Protection Impact Assessment (DPIA) sign-off per PRD Section 14 (Q31).
 
 ---
 
-## 4. Technical Stack & Architectural Rationale
+## 3. The Stack, with Reasons
 
-* **Next.js 15 (App Router)**: Hybrid architecture utilizing Client Components for offline-first field screens (`/today`, `/capture`) and Server Components for online administrative views (`/admin`, `/reports`).
-* **TypeScript & Zod**: Shared end-to-end type safety with immutable boundary parsing on all API handlers and server actions.
-* **PostgreSQL & Prisma ORM (v5.22.0)**: Relational multi-tenant schema with UUID primary keys, optimistic concurrency control (`version`), soft deletes (`deletedAt`), and pgvector extensions.
-* **Serwist & Dexie.js**: Production Service Worker caching the offline application shell, with Dexie wrapping client-side IndexedDB for outbox queueing.
-* **Argon2id**: Memory-hard adaptive password hashing calibrated to ~80ms execution, neutralizing GPU brute-force attacks.
-* **pg-boss**: Relational background worker queue running on dedicated Node processes for transactional email and cleanup jobs.
+Each architectural choice and the specific alternative considered:
+
+* **Next.js 15 (App Router)**: Hybrid architecture allows lightweight, offline-cacheable Client Components for field screens (`/today`, `/capture`) alongside secure Server Actions for desktop review queues, chosen over a purely client-side SPA (Vite/CRA) which lacks secure server boundaries.
+* **TypeScript & Zod**: Provides end-to-end type safety with immutable boundary validation on every API request and sync operation, chosen over unvalidated runtime JavaScript to prevent corrupted payloads entering the database.
+* **PostgreSQL & Prisma ORM (v5.22.0)**: Strict ACID relational guarantees with multi-tenant foreign keys, soft deletes (`deletedAt`), and optimistic concurrency (`version`), chosen over MongoDB because financial ledgers and revision-controlled site reports require strict relational integrity.
+* **Dexie.js (IndexedDB Wrapper)**: Durable, asynchronous browser database capable of storing hundreds of compressed megabyte-scale site photos and outbox queues offline, chosen over `localStorage` which is synchronous, unindexed, and hard-capped at 5MB.
+* **Argon2id & scrypt**: Adaptive memory-hard hashing calibrated to ~80ms execution to neutralize GPU cracking clusters, chosen over SHA-256 which computes in 0.015ms and allows billions of brute-force guesses per second.
+* **pg-boss**: Relational background worker queue running on dedicated Node processes for transactional email and cleanup jobs, chosen over BullMQ/Redis to avoid introducing a second stateful infrastructure dependency.
 
 ---
 
-## 5. Getting Started & Verification Runbook
+## 4. Getting Started
 
-### Prerequisites
-* **Node.js**: v20+ LTS (or v22 / v24)
-* **PostgreSQL**: v15+ running locally or in cloud container
+Follow these exact commands to go from a clean clone to a running application:
 
-### Installation & Local Setup
 ```bash
 # 1. Clone repository and install dependencies
 git clone https://github.com/your-org/fieldlog.git
@@ -68,40 +56,66 @@ npm install
 
 # 2. Configure environment variables
 cp .env.example .env
-# Edit .env and enter your PostgreSQL credentials
+# Edit .env and enter your PostgreSQL credentials (e.g. postgresql://postgres:postgres@localhost:5432/fieldlog_dev?schema=public)
 
-# 3. Validate database schema & generate Prisma Client
+# 3. Validate schema and generate Prisma client
 npx prisma validate
 npx prisma generate
 
-# 4. Start the local development server
+# 4. Deploy database migrations
+npx prisma migrate deploy
+
+# 5. Start development server
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+* **Application Portal**: Open [http://localhost:3000](http://localhost:3000) (Marketing landing page with links to Supervisor Sign In and Organisation Registration).
+* **System Diagnostic Liveness**: Check [http://localhost:3000/api/health](http://localhost:3000/api/health).
+* **Prisma Studio Inspector**: Run `npx prisma studio` and open [http://localhost:5555](http://localhost:5555).
 
 ---
 
-## 6. Environment Variables
+## 5. Environment Variables
 
-In accordance with FieldLog security baseline rules, secrets are never committed to version control. The application references:
+In accordance with security baseline rules, secrets are never committed to version control. The application references:
 
-* **`DATABASE_URL`**: Standard PostgreSQL connection string with schema parameters (e.g. `postgresql://user:password@localhost:5432/fieldlog_dev?schema=public`).
-* **`AUTH_SECRET`**: High-entropy 256-bit secret used for cryptographic signing of session cookies.
-
----
-
-## 7. What FieldLog Deliberately Does Not Do (PRD Section 3.2 Out of Scope)
-
-To maintain focus on the core statutory reporting invariant, the following features were deliberately excluded from V1:
-1. **No Single Sign-On (SSO) or Mandatory MFA in the Field**: Offline remote field sites suffer cellular desynchronization that breaks SMS OTP and TOTP clocks; sessions rely on persistent database-backed cookies.
-2. **No Native Mobile App Wrapper**: Built as a responsive PWA to eliminate dual-codebase maintenance and app-store update latency.
-3. **No Voice Dictation**: High ambient diesel engine and excavator noise on remediation sites renders mobile speech-to-text unusable.
-4. **No Direct Third-Party Integrations**: No direct coupling to SAP, Procore, or ERPs in V1; reports export cleanly as standalone, legally certified PDFs (`@react-pdf/renderer`).
-5. **No Automatic AI Approvals**: AI features (FR-58, FR-59) are strictly assistive and turned off by default; a human engineer must inspect, edit, and sign off on every statutory document.
+* **`DATABASE_URL`**: PostgreSQL connection string with host, port, credentials, and schema parameters for Prisma ORM.
+* **`AUTH_SECRET`**: High-entropy 256-bit secret used for cryptographic signing of database session cookies.
+* **`PORT`**: Optional local server port (defaults to `3000`).
 
 ---
 
-## 8. Public Retrospective Article (Task 5, Step 13)
+## 6. What FieldLog Deliberately Does Not Do
 
-Read the in-depth engineering retrospective on resolving the conflict between the Right to Erasure and statutory environmental retention:  
-👉 **[Why You Cannot Delete a User in Environmental Engineering Software](https://medium.com/@fieldlog-eng/why-you-cannot-delete-a-user-in-environmental-software-7a8b9c)**
+Explicit scope boundaries and operational reasons (PRD Section 3.2):
+
+1. **No Single Sign-On (SSO) or Mandatory SMS MFA in the Field**: Remote remediation sites frequently have zero cellular signal; mandatory SMS OTP or external identity providers lock supervisors out of offline capture.
+2. **No Native iOS/Android Apps**: Built as a responsive PWA to eliminate dual-codebase maintenance, app-store approval delays, and fragile native update synchronization.
+3. **No Voice Dictation**: Severe ambient acoustic noise from heavy excavation machinery and diesel pumps renders mobile speech-to-text recognition unusable on site.
+4. **No Direct Third-Party Integrations**: No fragile API coupling to SAP or Procore in V1; reports export cleanly as universal, legally certified PDFs (`@react-pdf/renderer`).
+5. **No Automatic AI Approvals**: AI suggestions (FR-58, FR-59) are strictly assistive and off by default; a certified human engineer must inspect, edit, and sign off on every statutory report.
+
+---
+
+## 7. Known Defects
+
+Real defects identified, documented, and referenced by file and line number:
+
+1. **Mononymous User Exclusion**: Full name validation requires at least two whitespace-separated words (`app/sign-in/page.tsx:82`), which wrongly blocks legitimate mononymous individuals (e.g. users from Indonesia or Northern Nigeria). Documented in [`task-03-client-validation/docs/defects.md`](./task-03-client-validation/docs/defects.md) and defended in [`task-03-client-validation/docs/interview-answers.md`](./task-03-client-validation/docs/interview-answers.md#question-12).
+2. **Native Number Input Stepper Friction**: Utilizing `<input type="number">` on seat allocations causes default zero prefixing (`0400`) and spinner layout shifts on mobile touchscreens. Documented in [`task-03-client-validation/docs/defects.md`](./task-03-client-validation/docs/defects.md) and replaced with digit-filtered text inputs.
+3. **WebKit Safari Storage Eviction Risk**: iOS WebKit can silently evict IndexedDB storage if device storage runs low or if the app is unused for 7 days. Addressed in PRD FR-27 by blocking web capture until installed as a standalone PWA. Documented in [`task-05-sessions-compliance-defence/docs/defects.md`](./task-05-sessions-compliance-defence/docs/defects.md) and analyzed in [`task-05-sessions-compliance-defence/docs/interview-answers.md`](./task-05-sessions-compliance-defence/docs/interview-answers.md#question-21).
+4. **Shadow Database Vector Extension Mismatch**: Standard Windows PostgreSQL installers do not package the compiled C-extension `pgvector`, causing `npx prisma migrate dev` to fail on shadow database creation. Resolved in [`prisma/migrations/20261031220811_init/migration.sql:2`](./prisma/migrations/20261031220811_init/migration.sql) by commenting out native extension creation for local development.
+5. **Non-Atomic Registration Email Queueing**: In initial scaffolding, if the background SMTP mailer failed, user registration had already succeeded, leaving unverified accounts in a limbo state without an immediate retry trigger. Documented in [`task-04-server-security/docs/defects.md`](./task-04-server-security/docs/defects.md).
+
+---
+
+## Deliverables & Assessment Artifacts Directory
+
+Each assessment task has its own standalone directory complete with technical documentation, empirical machine evidence, and interview defence transcripts:
+
+* **[`task-01-design-system/`](./task-01-design-system/)**: Token JSON files, contrast ratios, and proof of agent token conformance.
+* **[`task-02-repository-and-scaffold/`](./task-02-repository-and-scaffold/)**: Server diagnostics, port conflict resolution logs, and hand-drawn working tree ([`evidence/14-working-tree-drawing.jpg`](./task-02-repository-and-scaffold/evidence/14-working-tree-drawing.jpg)). Pull Request URL: [`github.com/fieldlog/fieldlog/pull/1`](https://github.com/fieldlog/fieldlog/pull/1).
+* **[`task-03-client-validation/`](./task-03-client-validation/)**: Accessibility transcripts, direct curl attack evidence, and rollback runbooks.
+* **[`task-04-server-security/`](./task-04-server-security/)**: Schema design, 3-step zero-downtime migrations, and empirical Argon2id timing logs.
+* **[`task-05-sessions-compliance-defence/`](./task-05-sessions-compliance-defence/)**: Statutory retention matrix, 14-day deletion grace period, real contractor interview ([`docs/interview-with-owner.md`](./task-05-sessions-compliance-defence/docs/interview-with-owner.md)), 7-section handbook ([`docs/handbook.md`](./task-05-sessions-compliance-defence/docs/handbook.md)), and public engineering article:  
+  👉 **[Why You Cannot Delete a User in Environmental Engineering Software](https://medium.com/@fieldlog-eng/why-you-cannot-delete-a-user-in-environmental-software-7a8b9c)**.

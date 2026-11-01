@@ -74,3 +74,4 @@ console.log('Saved public/favicon.ico and app/favicon.ico');
 fs.writeFileSync('public/icon-192.png', renderFieldLogLogo(192));
 fs.writeFileSync('public/icon-512.png', renderFieldLogLogo(512));
 console.log('Saved public/icon-192.png and public/icon-512.png');
+
