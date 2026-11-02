@@ -93,3 +93,12 @@ Our 20-minute field interview with Engr. Nnamdi Okonkwo of Niger Delta Ecologica
 | [`docs/defects.md`](file:///c:/Users/HP/Desktop/FieldLog/task-05-sessions-compliance-defence/docs/defects.md) | Architecture Doc | 4 real defects diagnosed: logout network failure, shared browser confusion, reset leak, worker idempotency |
 | [`docs/interview-answers.md`](file:///c:/Users/HP/Desktop/FieldLog/task-05-sessions-compliance-defence/docs/interview-answers.md) | Viva Preparation | In-depth ~200-word answers to all 22 viva questions across sessions, auth, and compliance |
 
+---
+
+## Public Engineering Publication (Task 5, Step 13)
+
+Read the live, published retrospective on LinkedIn:  
+👉 **[Why Can't You Just Delete a User's Account in Some Apps?](https://www.linkedin.com/pulse/why-cant-you-just-delete-users-account-some-apps-sonia-pepple-mifle)**  
+*Published by Sonia Pepple on LinkedIn (1,500-word deep dive into GDPR Article 17, cascading delete traps, and statutory retention).*
+
+

@@ -118,4 +118,4 @@ Each assessment task has its own standalone directory complete with technical do
 * **[`task-03-client-validation/`](./task-03-client-validation/)**: Accessibility transcripts, direct curl attack evidence, and rollback runbooks.
 * **[`task-04-server-security/`](./task-04-server-security/)**: Schema design, 3-step zero-downtime migrations, and empirical Argon2id timing logs.
 * **[`task-05-sessions-compliance-defence/`](./task-05-sessions-compliance-defence/)**: Statutory retention matrix, 14-day deletion grace period, real contractor interview ([`docs/interview-with-owner.md`](./task-05-sessions-compliance-defence/docs/interview-with-owner.md)), 7-section handbook ([`docs/handbook.md`](./task-05-sessions-compliance-defence/docs/handbook.md)), and public engineering article:  
-  👉 **[Why You Cannot Delete a User in Environmental Engineering Software](https://medium.com/@fieldlog-eng/why-you-cannot-delete-a-user-in-environmental-software-7a8b9c)**.
+  👉 **[Why Can't You Just Delete a User's Account in Some Apps?](https://www.linkedin.com/pulse/why-cant-you-just-delete-users-account-some-apps-sonia-pepple-mifle)** (Published on LinkedIn by Sonia Pepple).
